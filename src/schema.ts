@@ -128,6 +128,11 @@ export const basicsSchema = z
         region: z.string().optional(),
       })
       .optional(),
+    /**
+     * Optional rather than defaulted: a profile's `basics` block is a
+     * `.partial()` of this schema, and a default would materialise an empty
+     * array that silently overwrites the real profiles in the override merge.
+     */
     profiles: z
       .array(
         z.object({
@@ -136,7 +141,7 @@ export const basicsSchema = z
           url: z.url().optional(),
         }),
       )
-      .default([]),
+      .optional(),
   })
   .strict();
 

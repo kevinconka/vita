@@ -1,13 +1,13 @@
 # theme
 
-The vendored renderer. This *is* the brand — vita ships it as source, not as a
+The vendored renderer. This _is_ the brand — vita ships it as source, not as a
 dependency, so you can restyle it freely without forking a package.
 
-| File            | What it is                                                      |
-| --------------- | --------------------------------------------------------------- |
-| `tokens.json`   | Every brand value. Compiled to CSS custom properties at render.  |
-| `style.css`     | Structure and typography. Reads `var(--…)` only.                 |
-| `template.hbs`  | Handlebars markup for a JSON Resume document.                    |
+| File           | What it is                                                      |
+| -------------- | --------------------------------------------------------------- |
+| `tokens.json`  | Every brand value. Compiled to CSS custom properties at render. |
+| `style.css`    | Structure and typography. Reads `var(--…)` only.                |
+| `template.hbs` | Handlebars markup for a JSON Resume document.                   |
 
 ## The one rule
 

@@ -206,4 +206,19 @@ describe('emit', () => {
     const resume = compose(content(), profile({ basics: { label: 'Tailored' } }), 't');
     expect(resume.basics).toMatchObject({ name: 'Test Person', label: 'Tailored' });
   });
+
+  it('keeps basics fields the profile did not set', () => {
+    const store = content({
+      basics: {
+        name: 'Test Person',
+        email: 'test@example.com',
+        profiles: [{ network: 'GitHub', username: 'test' }],
+      },
+    });
+    const resume = compose(store, profile({ basics: { label: 'Tailored' } }), 't');
+    expect(resume.basics).toMatchObject({
+      email: 'test@example.com',
+      profiles: [{ network: 'GitHub', username: 'test' }],
+    });
+  });
 });

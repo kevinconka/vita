@@ -10,7 +10,19 @@
       "city": "Vienna",
       "countryCode": "AT",
       "region": "Wien"
-    }
+    },
+    "profiles": [
+      {
+        "network": "GitHub",
+        "username": "robinvega",
+        "url": "https://github.com/robinvega"
+      },
+      {
+        "network": "LinkedIn",
+        "username": "robinvega",
+        "url": "https://www.linkedin.com/in/robinvega"
+      }
+    ]
   },
   "work": [
     {

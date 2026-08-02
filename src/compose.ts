@@ -233,7 +233,12 @@ const SCHEMA_URL =
 
 /** Compose `content` through `profile` into a JSON Resume document. */
 export function compose(content: Content, profile: Profile, profileSlug: string): Resume {
-  const basics = { ...content.basics, ...profile.basics };
+  // Only keys the profile actually set may override; an explicit `undefined`
+  // must not blank out a field that content.yaml provides.
+  const overrides = Object.fromEntries(
+    Object.entries(profile.basics ?? {}).filter(([, value]) => value !== undefined),
+  );
+  const basics = { ...content.basics, ...overrides };
   const sections: Record<Section, unknown[]> = {
     work: composeWork(content.work, profile),
     education: composeEducation(content.education, profile),
