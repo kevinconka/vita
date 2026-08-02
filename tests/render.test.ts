@@ -152,3 +152,47 @@ describe('calendar dates', () => {
     expect(result.success).toBe(true);
   });
 });
+
+describe('embedded fonts', () => {
+  const themeWithFonts = join(root, 'themes/editorial');
+
+  it('inlines each vendored face as a base64 @font-face', async () => {
+    const theme = await loadTheme(themeWithFonts);
+    expect(theme.css).toContain('@font-face');
+    expect(theme.css).toContain('src: url(data:font/woff2;base64,');
+    // No network reference: the PDF has to render offline.
+    expect(theme.css).not.toContain('fonts.gstatic.com');
+    expect(theme.css).not.toContain('fonts.googleapis.com');
+  });
+
+  it('declares family names exactly as the stylesheet asks for them', async () => {
+    const theme = await loadTheme(themeWithFonts);
+    const declared = [
+      ...theme.css.matchAll(/@font-face\s*\{[^}]*?font-family:\s*'([^']+)'/g),
+    ].map((m) => m[1]);
+
+    // Regression guard: a slug-derived name gives "Dm Mono", which silently
+    // never matches the "DM Mono" the CSS requests.
+    expect(declared).toContain('DM Mono');
+    expect(declared).toContain('Instrument Serif');
+    expect(declared).toContain('Instrument Sans');
+
+    // Every family the stylesheet uses must actually be declared.
+    const used = new Set(
+      [...theme.css.matchAll(/font-family:\s*'([^']+)'[^;]*;/g)]
+        .map((m) => m[1]!)
+        .filter((f) => declared.includes(f) || /Instrument|DM /.test(f)),
+    );
+    for (const family of used) expect(declared).toContain(family);
+  });
+
+  it('carries the variable weight range through', async () => {
+    const theme = await loadTheme(themeWithFonts);
+    expect(theme.css).toMatch(/font-weight:\s*400 700;/);
+  });
+
+  it('leaves a theme without a fonts directory alone', async () => {
+    const theme = await loadTheme(themeDir);
+    expect(theme.css).not.toContain('@font-face');
+  });
+});

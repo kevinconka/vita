@@ -1,4 +1,4 @@
-import { readFile } from 'node:fs/promises';
+import { readdir, readFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import Handlebars from 'handlebars';
 import type { Page } from 'playwright';
@@ -100,6 +100,24 @@ function registerHelpers(handlebars: typeof Handlebars): void {
   handlebars.registerHelper('dateRange', (start: unknown, end: unknown) =>
     formatDateRange(start, end),
   );
+  /*
+   * `Robin Vega` -> `Robin <em>Vega</em>`. Lets a display face's italic carry
+   * the surname without hardcoding a name into the template. Escapes both
+   * halves itself, since it has to return a SafeString to emit the tag.
+   */
+  handlebars.registerHelper('nameWithItalicSurname', (value: unknown) => {
+    if (typeof value !== 'string' || value.trim() === '') return '';
+    const escape = (s: string) => handlebars.Utils.escapeExpression(s);
+
+    const parts = value.trim().split(/\s+/);
+    if (parts.length === 1) return new handlebars.SafeString(escape(parts[0]!));
+
+    const surname = parts.pop()!;
+    return new handlebars.SafeString(
+      `${escape(parts.join(' '))} <em>${escape(surname)}</em>`,
+    );
+  });
+
   handlebars.registerHelper('hostname', (value: unknown) => {
     if (typeof value !== 'string') return '';
     try {
@@ -110,22 +128,82 @@ function registerHelpers(handlebars: typeof Handlebars): void {
   });
 }
 
+/* ------------------------------------------------------------------- fonts */
+
+/**
+ * Filename convention for a vendored face:
+ *
+ *   <Family_Name>-<weight>-<style>.woff2
+ *   Inter-400-normal.woff2          Instrument_Serif-400-italic.woff2
+ *   Instrument_Sans-400-700-normal.woff2   (variable: a weight range)
+ *
+ * Underscores become spaces and nothing else is transformed, so the family
+ * name in the filename is exactly the one the stylesheet must ask for.
+ * Deriving it instead — title-casing a lowercase slug — silently mangles
+ * acronyms: `dm-mono` becomes `Dm Mono`, which never matches `DM Mono`, and
+ * the face falls back to a system font with no error anywhere.
+ */
+const FONT_FILE =
+  /^(?<family>.+?)-(?<weight>\d{3}(?:-\d{3})?)-(?<style>normal|italic)\.woff2$/;
+
+/**
+ * Inline every `<theme>/fonts/*.woff2` as a base64 `@font-face`.
+ *
+ * Embedding rather than linking is what makes the typography survive: the
+ * output has to render identically on a machine that has none of these faces
+ * installed, and rendering makes no network calls. Costs roughly a third more
+ * bytes than the raw woff2, which is nothing against a self-contained PDF.
+ */
+async function inlineFonts(dir: string): Promise<string> {
+  const fontDir = join(dir, 'fonts');
+
+  let files: string[];
+  try {
+    files = (await readdir(fontDir)).filter((f) => f.endsWith('.woff2')).sort();
+  } catch {
+    return ''; // A theme without a fonts/ directory just uses system faces.
+  }
+
+  const faces = await Promise.all(
+    files.map(async (file) => {
+      const match = FONT_FILE.exec(file);
+      if (!match?.groups) return `/* skipped ${file}: unrecognised filename */`;
+
+      const { family, weight, style } = match.groups;
+      const data = await readFile(join(fontDir, file));
+      return [
+        '@font-face {',
+        `  font-family: '${family!.replace(/_/g, ' ')}';`,
+        `  font-style: ${style};`,
+        `  font-weight: ${weight!.replace('-', ' ')};`,
+        '  font-display: block;',
+        `  src: url(data:font/woff2;base64,${data.toString('base64')}) format('woff2');`,
+        '}',
+      ].join('\n');
+    }),
+  );
+
+  return faces.join('\n\n');
+}
+
 /* ------------------------------------------------------------------- theme */
 
 /** Read the vendored theme from disk and compile it once. */
 export async function loadTheme(dir: string): Promise<Theme> {
-  const [templateSource, styles, tokensSource] = await Promise.all([
+  const [templateSource, styles, tokensSource, fontFaces] = await Promise.all([
     readFile(join(dir, 'template.hbs'), 'utf8'),
     readFile(join(dir, 'style.css'), 'utf8'),
     readFile(join(dir, 'tokens.json'), 'utf8'),
+    inlineFonts(dir),
   ]);
 
   const handlebars = Handlebars.create();
   registerHelpers(handlebars);
 
   const tokens = JSON.parse(tokensSource) as TokenTree;
-  // Tokens first: style.css derives its scale from them.
-  const css = `${tokensToRootBlock(tokens)}\n\n${styles}`;
+  // Faces first so they are available before any rule references them, then
+  // tokens, since style.css derives its whole scale from those.
+  const css = [fontFaces, tokensToRootBlock(tokens), styles].filter(Boolean).join('\n\n');
 
   return { dir, template: handlebars.compile(templateSource), css };
 }

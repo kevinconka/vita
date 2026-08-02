@@ -38,3 +38,13 @@ margin comes off the available height twice:
 ```
 available = 297mm − 2 × page.margin
 ```
+
+## Embedded fonts
+
+A theme may carry a `fonts/` directory. Every `.woff2` in it is inlined as a
+base64 `@font-face`, so the PDF renders identically on a machine that has none
+of them installed — which is the difference between a design and a suggestion.
+See `themes/editorial/fonts/OFL.md` for the naming convention.
+
+Only `editorial` ships fonts today. The others name families they expect to
+find installed and fall back to Helvetica, which costs them a lot.

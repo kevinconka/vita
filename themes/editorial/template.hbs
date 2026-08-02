@@ -1,0 +1,103 @@
+{{!--
+  editorial — masthead, rule, then label/content rows. The surname is set in
+  the display italic, which is the whole reason for choosing this face.
+--}}
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>{{resume.basics.name}}{{#if resume.basics.label}} — {{resume.basics.label}}{{/if}}</title>
+    <style>{{{css}}}</style>
+  </head>
+  <body>
+    <main class="page">
+      <header class="masthead">
+        <h1 class="masthead__name">{{nameWithItalicSurname resume.basics.name}}</h1>
+        {{#if resume.basics.summary}}
+          <p class="masthead__lede">{{{md resume.basics.summary}}}</p>
+        {{else if resume.basics.label}}
+          <p class="masthead__lede">{{resume.basics.label}}</p>
+        {{/if}}
+        <ul class="contact">
+          {{#if resume.basics.email}}<li>{{resume.basics.email}}</li>{{/if}}
+          {{#with resume.basics.location}}
+            {{#if city}}<li>{{city}}{{#if countryCode}}, {{countryCode}}{{/if}}</li>{{/if}}
+          {{/with}}
+          {{#if resume.basics.url}}<li>{{hostname resume.basics.url}}</li>{{/if}}
+          {{#each resume.basics.profiles}}
+            <li>{{network}}/{{username}}</li>
+          {{/each}}
+        </ul>
+      </header>
+
+      {{#if resume.work.length}}
+        <div class="row">
+          <div class="row__label">Experience</div>
+          <div>
+            {{#each resume.work}}
+              <article class="entry">
+                <h3 class="entry__role">
+                  {{position}}{{#if name}}, <span class="entry__org">{{name}}</span>{{/if}}
+                </h3>
+                <p class="entry__meta">
+                  <span>{{dateRange startDate endDate}}</span>
+                  {{#if location}}<span>{{location}}</span>{{/if}}
+                </p>
+                {{#if summary}}<p class="entry__notes">{{{md summary}}}</p>{{/if}}
+                {{#if highlights.length}}
+                  <ul class="entry__notes">
+                    {{#each highlights}}<li>{{{md this}}}</li>{{/each}}
+                  </ul>
+                {{/if}}
+              </article>
+            {{/each}}
+          </div>
+        </div>
+      {{/if}}
+
+      {{#if resume.education.length}}
+        <div class="row">
+          <div class="row__label">Education</div>
+          <div>
+            {{#each resume.education}}
+              <div class="edu">
+                <span class="edu__what">
+                  {{#if studyType}}{{studyType}}{{#if area}}, {{area}}{{/if}}{{else}}{{area}}{{/if}}
+                </span>
+                <span class="edu__where">{{institution}}</span>
+                <span class="edu__when">{{dateRange startDate endDate}}</span>
+              </div>
+            {{/each}}
+          </div>
+        </div>
+      {{/if}}
+
+      {{#if resume.skills.length}}
+        <div class="row">
+          <div class="row__label">Stack</div>
+          <div>
+            {{#each resume.skills}}
+              <div class="group">
+                <span class="group__name">{{name}}</span>
+                <ul class="runon">
+                  {{#each keywords}}<li>{{this}}</li>{{/each}}
+                </ul>
+              </div>
+            {{/each}}
+          </div>
+        </div>
+      {{/if}}
+
+      {{#if resume.languages.length}}
+        <div class="row">
+          <div class="row__label">Languages</div>
+          <div>
+            <ul class="runon">
+              {{#each resume.languages}}<li>{{language}} ({{fluency}})</li>{{/each}}
+            </ul>
+          </div>
+        </div>
+      {{/if}}
+    </main>
+  </body>
+</html>

@@ -1,0 +1,255 @@
+/*
+ * editorial — typeface-led.
+ *
+ * The other themes are layouts that happen to use whatever sans the machine
+ * has. This one is the reverse: the design IS the type pairing, and the layout
+ * gets out of its way.
+ *
+ *   Instrument Serif   display. High contrast, small x-height, and an italic
+ *                      worth using — the name and every role are set in it.
+ *   Instrument Sans    text. Neutral enough to disappear underneath the serif.
+ *   DM Mono            data. Dates, counts, contact — anything a machine would
+ *                      have produced is set as though a machine produced it.
+ *
+ * All three are embedded as base64 by the renderer, so the PDF looks the same
+ * on a machine that has none of them. Without that this theme is worthless:
+ * falling back to Times and Helvetica loses the entire point.
+ *
+ * The one structural idea is a two-column grid where the left column carries
+ * only labels and dates, set small in mono. Text never crosses into it, so the
+ * body has one hard left edge from the name to the last line.
+ */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+@page {
+  size: var(--page-size);
+  margin: var(--page-margin);
+}
+
+html {
+  font-size: var(--font-size-base);
+}
+
+body {
+  background: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-text);
+  line-height: var(--font-line-height);
+  -webkit-font-smoothing: antialiased;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+  text-rendering: optimizeLegibility;
+}
+
+.page {
+  background: var(--color-paper);
+  margin: 0 auto;
+  max-width: 210mm;
+  padding: var(--page-margin);
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+code {
+  font-family: var(--font-data);
+  font-size: 0.92em;
+}
+
+/* --------------------------------------------------------------- masthead */
+
+.masthead {
+  padding-top: var(--space-crown);
+}
+
+/*
+ * The name in Instrument Serif at 50pt. The face has a small x-height and
+ * fine hairlines, so it wants to be set larger than a grotesque would be and
+ * tracked in slightly; at this size it reads as a masthead rather than a
+ * heading.
+ */
+.masthead__name {
+  font-family: var(--font-display);
+  font-size: var(--font-name-size);
+  font-weight: 400;
+  letter-spacing: var(--font-name-tracking);
+  line-height: 0.94;
+}
+
+/* The one italic on the page, and the reason to pick this face at all. */
+.masthead__name em {
+  font-style: italic;
+}
+
+.masthead__lede {
+  color: var(--color-grey);
+  font-family: var(--font-display);
+  font-size: var(--font-lede-size);
+  letter-spacing: var(--font-lede-tracking);
+  line-height: 1.32;
+  margin-top: calc(var(--space-unit) * 2);
+  max-width: 34em;
+}
+
+.contact {
+  color: var(--color-faint);
+  display: flex;
+  flex-wrap: wrap;
+  font-family: var(--font-data);
+  font-size: var(--font-data-size);
+  gap: 0 calc(var(--space-unit) * 4);
+  list-style: none;
+  margin-top: calc(var(--space-unit) * 4);
+}
+
+/* A single rule under the masthead, full measure. */
+.masthead::after {
+  background: var(--color-ink);
+  content: '';
+  display: block;
+  height: var(--rule-width);
+  margin-top: var(--space-rule);
+}
+
+/* ------------------------------------------------------------------- grid */
+
+/*
+ * Two columns for everything below the rule: labels and dates left in mono,
+ * content right. The body's left edge never moves.
+ */
+.row {
+  display: grid;
+  gap: 0 var(--grid-gutter);
+  grid-template-columns: var(--grid-label) 1fr;
+}
+
+.row + .row {
+  margin-top: var(--space-section);
+}
+
+.row__label {
+  color: var(--color-faint);
+  font-family: var(--font-data);
+  font-size: var(--font-label-size);
+  letter-spacing: var(--font-label-tracking);
+  padding-top: 0.45em;
+  text-transform: uppercase;
+}
+
+/* ------------------------------------------------------------------ entry */
+
+.entry + .entry {
+  margin-top: var(--space-entry);
+}
+
+/* Role in the display serif — the second place the face earns its keep. */
+.entry__role {
+  font-family: var(--font-display);
+  font-size: var(--font-role-size);
+  font-weight: 400;
+  letter-spacing: var(--font-role-tracking);
+  line-height: 1.2;
+}
+
+.entry__org {
+  color: var(--color-accent);
+  font-style: italic;
+}
+
+.entry__meta {
+  align-items: baseline;
+  color: var(--color-faint);
+  display: flex;
+  font-family: var(--font-data);
+  font-size: var(--font-data-size);
+  gap: calc(var(--space-unit) * 4);
+  margin-top: 0.25em;
+}
+
+.entry__notes {
+  list-style: none;
+  margin-top: calc(var(--space-unit) * 2);
+  max-width: 46em;
+}
+
+.entry__notes > li + li {
+  margin-top: var(--space-line);
+}
+
+/* ------------------------------------------------------------------ lists */
+
+.runon {
+  list-style: none;
+}
+
+.runon > li {
+  display: inline;
+}
+
+.runon > li:not(:last-child)::after {
+  color: var(--color-faint);
+  content: ',\00a0';
+}
+
+.group + .group {
+  margin-top: calc(var(--space-unit) * 2);
+}
+
+.group__name {
+  color: var(--color-faint);
+  font-family: var(--font-data);
+  font-size: var(--font-data-size);
+}
+
+.edu + .edu {
+  margin-top: 0.35em;
+}
+
+.edu {
+  align-items: baseline;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 calc(var(--space-unit) * 2);
+}
+
+.edu__what {
+  font-family: var(--font-display);
+  font-size: 1.2em;
+}
+
+.edu__where {
+  color: var(--color-grey);
+  font-style: italic;
+}
+
+.edu__where::before {
+  color: var(--color-faint);
+  content: '— ';
+}
+
+.edu__when {
+  color: var(--color-faint);
+  font-family: var(--font-data);
+  font-size: var(--font-data-size);
+}
+
+@media print {
+  .page {
+    max-width: none;
+    padding: 0;
+  }
+
+  .entry,
+  .row {
+    break-inside: avoid;
+  }
+}
