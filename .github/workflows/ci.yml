@@ -63,13 +63,18 @@ jobs:
       - name: Test with coverage
         run: pnpm coverage
 
+      # Advisory only. The coverage gate is the vitest step above; this just
+      # publishes the report. Set a CODECOV_TOKEN repository secret for
+      # reliable uploads — this repo is public, so tokenless uploads may work,
+      # but they are best-effort and rate-limited. Not OIDC: that would need
+      # `id-token: write` on the job and `use_oidc: true` here, and it buys
+      # nothing over a token for a public repo.
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v5
         with:
           files: ./coverage/lcov.info
-          # Public repo: uploads work without a token via OIDC. The secret is
-          # picked up when set, and its absence must not fail the build.
           token: ${{ secrets.CODECOV_TOKEN }}
+          # A missing token or a flaky upload must not fail an otherwise good build.
           fail_ci_if_error: false
 
       # The real end-to-end check: the golden test pins composition, this pins
