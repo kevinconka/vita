@@ -1,0 +1,45 @@
+{
+  "name": "vita",
+  "version": "0.1.0",
+  "description": "CV as code: write tagged bullets once, compose a job-tailored resume, render branded HTML and PDF.",
+  "license": "MIT",
+  "type": "module",
+  "bin": {
+    "vita": "./dist/cli.js"
+  },
+  "engines": {
+    "node": ">=20.14.0"
+  },
+  "packageManager": "pnpm@10.33.0",
+  "files": [
+    "dist",
+    "theme"
+  ],
+  "scripts": {
+    "vita": "tsx src/cli.ts",
+    "build": "tsc -p tsconfig.build.json",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint . && prettier --check .",
+    "format": "prettier --write .",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "commander": "^15.0.0",
+    "handlebars": "^4.7.9",
+    "marked": "^18.0.7",
+    "playwright": "^1.62.1",
+    "yaml": "^2.9.0",
+    "zod": "^4.4.3"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@types/node": "^22.20.0",
+    "eslint": "^10.8.0",
+    "eslint-config-prettier": "^10.1.8",
+    "prettier": "^3.9.6",
+    "tsx": "^4.23.4",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.65.0",
+    "vitest": "^4.1.10"
+  }
+}

@@ -1,0 +1,6 @@
+build/
+dist/
+node_modules/
+pnpm-lock.yaml
+tests/__golden__/
+theme/template.hbs
