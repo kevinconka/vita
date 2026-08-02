@@ -1,0 +1,282 @@
+/*
+ * vita theme — structure and typography only.
+ *
+ * Every brand value comes from theme/tokens.json, injected as CSS custom
+ * properties into a :root block ahead of this file. Nothing here may hardcode
+ * a colour, family or size: if you find yourself wanting to, add a token.
+ *
+ * Layout is derived from the `even` JSON Resume theme by Rafael Bardini (MIT);
+ * see theme/README.md.
+ */
+
+/* ---------------------------------------------------------------- reset */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* ------------------------------------------------------- typographic scale */
+
+:root {
+  --scale-0: var(--font-size-base);
+  --scale-1: calc(var(--scale-0) * var(--font-scale-ratio));
+  --scale-2: calc(var(--scale-1) * var(--font-scale-ratio));
+  --scale-3: calc(var(--scale-2) * var(--font-scale-ratio));
+  --scale-4: calc(var(--scale-3) * var(--font-scale-ratio));
+
+  --space-1: var(--space-unit);
+  --space-2: calc(var(--space-unit) * 2);
+  --space-3: calc(var(--space-unit) * 3);
+  --space-4: calc(var(--space-unit) * 4);
+}
+
+/* ------------------------------------------------------------------ page */
+
+@page {
+  size: var(--page-size);
+  margin: var(--page-margin);
+}
+
+html {
+  font-size: var(--font-size-base);
+}
+
+body {
+  background: var(--color-background);
+  color: var(--color-text);
+  font-family: var(--font-body);
+  font-weight: var(--font-weight-body);
+  line-height: var(--font-line-height);
+}
+
+/* On screen, mimic a sheet of paper. In print the @page rule owns the margin. */
+.page {
+  background: var(--color-background);
+  margin: 0 auto;
+  max-width: calc(210mm);
+  padding: var(--page-margin);
+}
+
+a {
+  color: var(--color-link);
+  text-decoration: none;
+}
+
+a:hover,
+a:focus {
+  text-decoration: underline;
+}
+
+strong {
+  color: var(--color-text);
+  font-weight: var(--font-weight-heading);
+}
+
+code {
+  font-family: var(--font-mono);
+  font-size: 0.92em;
+}
+
+/* --------------------------------------------------------------- masthead */
+
+.masthead {
+  align-items: center;
+  border-bottom: var(--rule-width) solid var(--color-accent);
+  display: flex;
+  gap: var(--space-column-gap);
+  padding-bottom: var(--space-4);
+}
+
+.masthead__body {
+  flex: 1;
+}
+
+.masthead__name {
+  color: var(--color-text);
+  font-family: var(--font-heading);
+  font-size: var(--scale-4);
+  font-weight: var(--font-weight-heading);
+  line-height: 1.1;
+}
+
+.masthead__label {
+  color: var(--color-accent);
+  font-size: var(--scale-1);
+  margin-top: var(--space-1);
+}
+
+.masthead__avatar {
+  border: var(--avatar-border-width) solid var(--color-accent);
+  border-radius: var(--avatar-radius);
+  height: var(--avatar-size);
+  object-fit: cover;
+  width: var(--avatar-size);
+}
+
+.contact {
+  color: var(--color-muted);
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1) var(--space-3);
+  list-style: none;
+  margin-top: var(--space-2);
+}
+
+.contact a {
+  color: var(--color-muted);
+}
+
+.summary {
+  color: var(--color-text);
+  margin-top: var(--space-3);
+}
+
+/* ---------------------------------------------------------------- columns */
+
+.columns {
+  display: grid;
+  gap: var(--space-column-gap);
+  grid-template-columns: var(--page-main-width) var(--page-sidebar-width);
+  margin-top: var(--space-section);
+}
+
+/* ---------------------------------------------------------------- section */
+
+.section + .section {
+  margin-top: var(--space-section);
+}
+
+.section__title {
+  border-bottom: 1px solid var(--color-rule);
+  color: var(--color-accent);
+  font-family: var(--font-heading);
+  font-size: var(--scale-0);
+  font-weight: var(--font-weight-heading);
+  letter-spacing: var(--font-heading-tracking);
+  margin-bottom: var(--space-3);
+  padding-bottom: var(--rule-section-gap);
+  text-transform: var(--font-heading-transform);
+}
+
+/* ------------------------------------------------------------------ entry */
+
+.entry + .entry {
+  margin-top: var(--space-entry);
+}
+
+.entry__head {
+  align-items: baseline;
+  display: flex;
+  gap: var(--space-2);
+  justify-content: space-between;
+}
+
+.entry__title {
+  font-family: var(--font-heading);
+  font-size: var(--scale-1);
+  font-weight: var(--font-weight-heading);
+  line-height: 1.2;
+}
+
+.entry__org {
+  color: var(--color-accent);
+  font-weight: var(--font-weight-heading);
+}
+
+.entry__meta {
+  color: var(--color-muted);
+  flex-shrink: 0;
+  font-size: 0.92em;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.entry__summary {
+  margin-top: var(--space-1);
+}
+
+.entry__bullets {
+  list-style: none;
+  margin-top: var(--space-2);
+}
+
+.entry__bullets > li {
+  padding-left: var(--space-3);
+  position: relative;
+}
+
+.entry__bullets > li + li {
+  margin-top: var(--space-bullet);
+}
+
+.entry__bullets > li::before {
+  color: var(--color-accent);
+  content: '•';
+  left: 0;
+  position: absolute;
+}
+
+/* ------------------------------------------------------------------- tags */
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+  list-style: none;
+  margin-top: var(--space-1);
+}
+
+.tags > li {
+  background: var(--tag-background);
+  border-radius: var(--tag-radius);
+  color: var(--tag-color);
+  padding: var(--tag-padding);
+}
+
+/* -------------------------------------------------------------- key/value */
+
+.pairs {
+  list-style: none;
+}
+
+.pairs > li {
+  display: flex;
+  gap: var(--space-2);
+  justify-content: space-between;
+}
+
+.pairs > li + li {
+  margin-top: var(--space-1);
+}
+
+.pairs__value {
+  color: var(--color-muted);
+  text-align: right;
+}
+
+/* ------------------------------------------------------------------ print */
+
+@media print {
+  .page {
+    max-width: none;
+    padding: 0;
+  }
+
+  /* Never orphan a heading or split an entry across the page break. */
+  .section__title,
+  .entry {
+    break-inside: avoid;
+  }
+
+  .section__title {
+    break-after: avoid;
+  }
+
+  a {
+    color: inherit;
+  }
+}

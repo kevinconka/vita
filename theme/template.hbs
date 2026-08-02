@@ -1,0 +1,168 @@
+{{!--
+  vita theme template.
+
+  Renders a JSON Resume document. The only inputs are `resume` (a valid
+  resume.json) and `css` (tokens compiled to custom properties, plus
+  style.css). No brand values live here — add a token instead.
+
+  Helpers are registered in src/render.ts: `md`, `dateRange`, `hostname`.
+--}}
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{{resume.basics.name}}{{#if resume.basics.label}} — {{resume.basics.label}}{{/if}}</title>
+    <style>{{{css}}}</style>
+  </head>
+  <body>
+    <main class="page">
+      <header class="masthead">
+        <div class="masthead__body">
+          <h1 class="masthead__name">{{resume.basics.name}}</h1>
+          {{#if resume.basics.label}}
+            <p class="masthead__label">{{resume.basics.label}}</p>
+          {{/if}}
+
+          <ul class="contact">
+            {{#if resume.basics.email}}
+              <li><a href="mailto:{{resume.basics.email}}">{{resume.basics.email}}</a></li>
+            {{/if}}
+            {{#if resume.basics.phone}}
+              <li>{{resume.basics.phone}}</li>
+            {{/if}}
+            {{#with resume.basics.location}}
+              {{#if city}}<li>{{city}}{{#if countryCode}}, {{countryCode}}{{/if}}</li>{{/if}}
+            {{/with}}
+            {{#if resume.basics.url}}
+              <li><a href="{{resume.basics.url}}">{{hostname resume.basics.url}}</a></li>
+            {{/if}}
+            {{#each resume.basics.profiles}}
+              <li>
+                {{#if url}}
+                  <a href="{{url}}">{{network}}{{#if username}} / {{username}}{{/if}}</a>
+                {{else}}
+                  {{network}}{{#if username}} / {{username}}{{/if}}
+                {{/if}}
+              </li>
+            {{/each}}
+          </ul>
+        </div>
+
+        {{#if resume.basics.image}}
+          <img class="masthead__avatar" src="{{resume.basics.image}}" alt="" />
+        {{/if}}
+      </header>
+
+      {{#if resume.basics.summary}}
+        <p class="summary">{{{md resume.basics.summary}}}</p>
+      {{/if}}
+
+      <div class="columns">
+        <div class="columns__main">
+          {{#if resume.work.length}}
+            <section class="section">
+              <h2 class="section__title">Experience</h2>
+              {{#each resume.work}}
+                <article class="entry">
+                  <div class="entry__head">
+                    <h3 class="entry__title">
+                      {{position}}
+                      {{#if name}}<span class="entry__org">· {{name}}</span>{{/if}}
+                    </h3>
+                    <span class="entry__meta">
+                      {{dateRange startDate endDate}}{{#if location}}<br />{{location}}{{/if}}
+                    </span>
+                  </div>
+                  {{#if summary}}
+                    <p class="entry__summary">{{{md summary}}}</p>
+                  {{/if}}
+                  {{#if highlights.length}}
+                    <ul class="entry__bullets">
+                      {{#each highlights}}<li>{{{md this}}}</li>{{/each}}
+                    </ul>
+                  {{/if}}
+                </article>
+              {{/each}}
+            </section>
+          {{/if}}
+
+          {{#if resume.projects.length}}
+            <section class="section">
+              <h2 class="section__title">Projects</h2>
+              {{#each resume.projects}}
+                <article class="entry">
+                  <div class="entry__head">
+                    <h3 class="entry__title">
+                      {{#if url}}<a href="{{url}}">{{name}}</a>{{else}}{{name}}{{/if}}
+                    </h3>
+                    <span class="entry__meta">{{dateRange startDate endDate}}</span>
+                  </div>
+                  {{#if description}}
+                    <p class="entry__summary">{{{md description}}}</p>
+                  {{/if}}
+                  {{#if highlights.length}}
+                    <ul class="entry__bullets">
+                      {{#each highlights}}<li>{{{md this}}}</li>{{/each}}
+                    </ul>
+                  {{/if}}
+                </article>
+              {{/each}}
+            </section>
+          {{/if}}
+
+          {{#if resume.education.length}}
+            <section class="section">
+              <h2 class="section__title">Education</h2>
+              {{#each resume.education}}
+                <article class="entry">
+                  <div class="entry__head">
+                    <h3 class="entry__title">
+                      {{#if studyType}}{{studyType}}{{#if area}} in {{area}}{{/if}}{{else}}{{area}}{{/if}}
+                    </h3>
+                    <span class="entry__meta">{{dateRange startDate endDate}}</span>
+                  </div>
+                  <p class="entry__summary">
+                    <span class="entry__org">{{#if url}}<a href="{{url}}">{{institution}}</a>{{else}}{{institution}}{{/if}}</span>
+                    {{#if score}} · {{score}}{{/if}}
+                  </p>
+                  {{#if courses.length}}
+                    <ul class="entry__bullets">
+                      {{#each courses}}<li>{{{md this}}}</li>{{/each}}
+                    </ul>
+                  {{/if}}
+                </article>
+              {{/each}}
+            </section>
+          {{/if}}
+        </div>
+
+        <aside class="columns__side">
+          {{#each resume.skills}}
+            <section class="section">
+              <h2 class="section__title">{{name}}</h2>
+              {{#if level}}<p class="entry__summary">{{level}}</p>{{/if}}
+              <ul class="tags">
+                {{#each keywords}}<li>{{this}}</li>{{/each}}
+              </ul>
+            </section>
+          {{/each}}
+
+          {{#if resume.languages.length}}
+            <section class="section">
+              <h2 class="section__title">Languages</h2>
+              <ul class="pairs">
+                {{#each resume.languages}}
+                  <li>
+                    <span>{{language}}</span>
+                    <span class="pairs__value">{{fluency}}</span>
+                  </li>
+                {{/each}}
+              </ul>
+            </section>
+          {{/if}}
+        </aside>
+      </div>
+    </main>
+  </body>
+</html>
