@@ -1,0 +1,240 @@
+/*
+ * keynote — the CV as a product page.
+ *
+ * Two moves, both lifted straight from how Apple lays out a product:
+ *
+ * 1. A HERO that is allowed to waste space. The name is set once, large, and
+ *    centred, with a single line of positioning copy beneath it. Nothing else
+ *    competes. The confidence is in what is left out.
+ * 2. Everything after the hero is a SPEC TABLE: full-width hairline rows, label
+ *    in a fixed left column, value in the measure. A spec row makes no claim
+ *    about importance, which is exactly right for the back half of a CV.
+ *
+ * No bullet glyphs anywhere. Separation is done with space and hairlines, both
+ * of which are quieter than a dot and read better at small sizes.
+ */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+@page {
+  size: var(--page-size);
+  margin: var(--page-margin);
+}
+
+html {
+  font-size: var(--font-size-base);
+}
+
+body {
+  background: var(--color-background);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  line-height: var(--font-line-height);
+  -webkit-font-smoothing: antialiased;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+
+.page {
+  margin: 0 auto;
+  max-width: 210mm;
+  padding: var(--page-margin);
+}
+
+a {
+  color: var(--color-accent);
+  text-decoration: none;
+}
+
+code {
+  font-family: inherit;
+  font-weight: 600;
+}
+
+/* ------------------------------------------------------------------- hero */
+
+.hero {
+  padding-bottom: var(--space-hero-bottom);
+  padding-top: var(--space-hero-top);
+  text-align: center;
+}
+
+.hero__name {
+  font-size: var(--font-hero-size);
+  font-weight: var(--font-hero-weight);
+  letter-spacing: var(--font-hero-tracking);
+  line-height: 1.04;
+}
+
+/* The positioning line. One sentence, larger than body, grey, centred. */
+.hero__lead {
+  color: var(--color-muted);
+  font-size: var(--font-lead-size);
+  font-weight: var(--font-lead-weight);
+  letter-spacing: -0.01em;
+  line-height: 1.38;
+  margin: calc(var(--space-unit) * 3) auto 0;
+  max-width: var(--measure-lead);
+}
+
+.hero__contact {
+  color: var(--color-muted);
+  display: flex;
+  flex-wrap: wrap;
+  font-size: 0.92em;
+  gap: calc(var(--space-unit) * 1) calc(var(--space-unit) * 5);
+  justify-content: center;
+  list-style: none;
+  margin-top: calc(var(--space-unit) * 5);
+}
+
+/* ---------------------------------------------------------------- section */
+
+.section {
+  border-top: var(--hairline-width) solid var(--color-hairline);
+  padding-top: calc(var(--space-unit) * 4);
+}
+
+.section + .section {
+  margin-top: var(--space-section);
+}
+
+.section__title {
+  font-size: var(--font-section-size);
+  font-weight: var(--font-section-weight);
+  letter-spacing: var(--font-section-tracking);
+  margin-bottom: calc(var(--space-unit) * 5);
+}
+
+/* ------------------------------------------------------------------ entry */
+
+.entry + .entry {
+  margin-top: var(--space-entry);
+}
+
+.entry__head {
+  align-items: baseline;
+  display: flex;
+  gap: calc(var(--space-unit) * 3);
+  justify-content: space-between;
+}
+
+.entry__role {
+  font-size: var(--font-role-size);
+  font-weight: var(--font-role-weight);
+  letter-spacing: -0.012em;
+  min-width: 0;
+}
+
+.entry__org {
+  color: var(--color-muted);
+  font-weight: 400;
+}
+
+.entry__when {
+  color: var(--color-muted);
+  flex-shrink: 0;
+  font-size: 0.92em;
+  white-space: nowrap;
+}
+
+/* Paragraphs, not bullets. Space does the separating. */
+.entry__notes {
+  list-style: none;
+  margin-top: calc(var(--space-unit) * 2);
+  max-width: var(--measure-body);
+}
+
+.entry__notes > li + li {
+  margin-top: calc(var(--space-unit) * 1.5);
+}
+
+/* ------------------------------------------------------------------ specs */
+
+/*
+ * The spec row. A hairline between every pair, label in a fixed column, value
+ * filling the rest. Identical treatment for skills, education and languages,
+ * which is the point: at this depth in the page nothing outranks anything.
+ */
+.spec {
+  border-top: var(--hairline-width) solid var(--color-hairline);
+  display: grid;
+  gap: 0 calc(var(--space-unit) * 4);
+  grid-template-columns: var(--spec-label-width) 1fr;
+  padding: var(--space-row) 0;
+}
+
+.spec:last-child {
+  border-bottom: var(--hairline-width) solid var(--color-hairline);
+}
+
+.spec__label {
+  color: var(--color-muted);
+  font-size: var(--font-label-size);
+  font-weight: 600;
+  letter-spacing: var(--font-label-tracking);
+  padding-top: 0.15em;
+  text-transform: uppercase;
+}
+
+.spec__value {
+  max-width: var(--measure-body);
+}
+
+.spec__value--muted {
+  color: var(--color-muted);
+}
+
+/* Skills as one continuous line of text, comma-separated. */
+.runon {
+  list-style: none;
+}
+
+.runon > li {
+  display: inline;
+}
+
+.runon > li:not(:last-child)::after {
+  color: var(--color-muted);
+  content: ',\00a0';
+}
+
+.line {
+  display: flex;
+  gap: calc(var(--space-unit) * 3);
+  justify-content: space-between;
+}
+
+.line + .line {
+  margin-top: 0.25em;
+}
+
+.line__value {
+  color: var(--color-muted);
+}
+
+.edu + .edu {
+  margin-top: 0.4em;
+}
+
+.edu__where {
+  color: var(--color-muted);
+}
+
+@media print {
+  .page {
+    max-width: none;
+    padding: 0;
+  }
+
+  .entry,
+  .spec {
+    break-inside: avoid;
+  }
+}

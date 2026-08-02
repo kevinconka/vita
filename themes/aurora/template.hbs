@@ -1,0 +1,110 @@
+{{!--
+  aurora — the CV as a product page. Experience lifts onto a panel; the rest
+  sits flat on the canvas. Sections are counted like a spec sheet.
+--}}
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>{{resume.basics.name}}{{#if resume.basics.label}} — {{resume.basics.label}}{{/if}}</title>
+    <style>{{{css}}}</style>
+  </head>
+  <body>
+    <main class="page">
+      <header class="masthead">
+        {{#if resume.basics.label}}
+          <p class="eyebrow">{{resume.basics.label}}</p>
+        {{/if}}
+        <h1 class="masthead__name">{{resume.basics.name}}</h1>
+        <ul class="contact">
+          {{#if resume.basics.email}}<li>{{resume.basics.email}}</li>{{/if}}
+          {{#with resume.basics.location}}
+            {{#if city}}<li>{{city}}{{#if countryCode}}, {{countryCode}}{{/if}}</li>{{/if}}
+          {{/with}}
+          {{#if resume.basics.url}}<li>{{hostname resume.basics.url}}</li>{{/if}}
+          {{#each resume.basics.profiles}}
+            <li>{{network}}/{{username}}</li>
+          {{/each}}
+        </ul>
+        {{#if resume.basics.summary}}
+          <p class="summary">{{{md resume.basics.summary}}}</p>
+        {{/if}}
+      </header>
+
+      {{#if resume.work.length}}
+        <section class="section">
+          <div class="section__head">
+            <span class="eyebrow">Experience</span>
+            <span class="section__count">{{resume.work.length}}</span>
+          </div>
+          <div class="stack">
+            {{#each resume.work}}
+              <article class="panel">
+                <div class="entry__head">
+                  <h3 class="entry__title">
+                    {{position}}{{#if name}} <span class="entry__org">{{name}}</span>{{/if}}
+                  </h3>
+                  <span class="entry__meta">
+                    {{dateRange startDate endDate}}{{#if location}} · {{location}}{{/if}}
+                  </span>
+                </div>
+                {{#if summary}}<p>{{{md summary}}}</p>{{/if}}
+                {{#if highlights.length}}
+                  <ul class="entry__bullets">
+                    {{#each highlights}}<li>{{{md this}}}</li>{{/each}}
+                  </ul>
+                {{/if}}
+              </article>
+            {{/each}}
+          </div>
+        </section>
+      {{/if}}
+
+      <section class="section">
+        <div class="section__head">
+          <span class="eyebrow">Details</span>
+        </div>
+        <div class="foot">
+          <div class="panel">
+            {{#each resume.skills}}
+              <div class="group">
+                <p class="group__name">{{name}}</p>
+                <ul class="chips">
+                  {{#each keywords}}<li>{{this}}</li>{{/each}}
+                </ul>
+              </div>
+            {{/each}}
+          </div>
+
+          <div class="panel">
+            {{#if resume.education.length}}
+              <div class="group">
+                <p class="group__name">Education</p>
+                {{#each resume.education}}
+                  <div class="edu">
+                    <div class="edu__what">
+                      {{#if studyType}}{{studyType}}{{#if area}}, {{area}}{{/if}}{{else}}{{area}}{{/if}}
+                    </div>
+                    <div class="edu__where">{{institution}}</div>
+                    <div class="edu__when">{{dateRange startDate endDate}}</div>
+                  </div>
+                {{/each}}
+              </div>
+            {{/if}}
+
+            {{#if resume.languages.length}}
+              <div class="group">
+                <p class="group__name">Languages</p>
+                <ul class="pairs">
+                  {{#each resume.languages}}
+                    <li><span>{{language}}</span><span class="pairs__value">{{fluency}}</span></li>
+                  {{/each}}
+                </ul>
+              </div>
+            {{/if}}
+          </div>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>
