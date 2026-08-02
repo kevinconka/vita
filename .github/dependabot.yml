@@ -1,0 +1,32 @@
+version: 2
+
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
+    commit-message:
+      prefix: chore
+      include: scope
+    groups:
+      # One PR for the whole dev toolchain: these move together and each one
+      # is verified by the same CI run, so separate PRs are just noise.
+      dev-dependencies:
+        dependency-type: development
+        update-types: [minor, patch]
+      production-minor:
+        dependency-type: production
+        update-types: [minor, patch]
+    ignore:
+      # Playwright ships a matching browser build; bumping it invalidates the
+      # CI browser cache, so take those deliberately rather than weekly.
+      - dependency-name: playwright
+        update-types: [version-update:semver-major]
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    commit-message:
+      prefix: ci

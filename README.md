@@ -169,8 +169,21 @@ build/           generated output (gitignored)
 ```bash
 pnpm lint        # eslint + prettier
 pnpm typecheck
-pnpm test
+pnpm test        # vitest
+pnpm coverage    # vitest + thresholds
+pnpm knip        # unused files, exports and dependencies
 ```
+
+`pnpm install` installs [lefthook](https://lefthook.dev) git hooks. On commit
+they run ESLint and Prettier over the staged files (fixing in place), validate
+`content/` and `profiles/` when you touch them, and check the commit message
+against [Conventional Commits](https://www.conventionalcommits.org). Everything
+slower — typecheck, tests, coverage, knip, the PDF build — runs in CI, not in
+the way of a commit. Use `git commit --no-verify` to skip once.
+
+Coverage thresholds live in `vitest.config.ts` and fail `pnpm coverage`
+locally and in CI. Codecov is advisory: it comments on the diff but does not
+gate the merge, since vitest already did.
 
 `tests/__golden__/ml-lead.resume.json` pins the sample profile's output. If a
 change to composition is intentional, refresh it deliberately and read the

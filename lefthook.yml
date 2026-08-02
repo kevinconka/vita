@@ -1,0 +1,32 @@
+# Pre-commit hooks. Installed automatically by the `prepare` script on
+# `pnpm install`; run `pnpm exec lefthook install` if you ever need to redo it.
+#
+# The rule of thumb: hooks catch what is cheap to check on the changed files.
+# Anything slow or whole-repo (typecheck, tests, coverage, knip, the PDF build)
+# belongs in CI, not in the way of a commit.
+#
+# Skip once with `git commit --no-verify`; CI still has the final say.
+
+pre-commit:
+  parallel: true
+  jobs:
+    - name: eslint
+      glob: '*.{ts,js}'
+      run: pnpm exec eslint --fix {staged_files}
+      stage_fixed: true
+
+    - name: prettier
+      glob: '*.{ts,js,json,jsonc,yml,yaml,md,css}'
+      run: pnpm exec prettier --write --ignore-unknown {staged_files}
+      stage_fixed: true
+
+    # Content and profiles are the source of truth; a typo here breaks the
+    # build for every profile, and validating is near-instant.
+    - name: vita lint
+      glob: '{content,profiles}/*.{yml,yaml}'
+      run: pnpm vita lint
+
+commit-msg:
+  jobs:
+    - name: commitlint
+      run: pnpm exec commitlint --edit {1}
