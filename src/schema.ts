@@ -23,7 +23,7 @@ const taggable = {
 };
 
 /** A single tagged bullet. `text` is Markdown; inline formatting is rendered. */
-export const bulletSchema = z
+const bulletSchema = z
   .object({
     text: z.string().min(1),
     /**
@@ -61,7 +61,7 @@ const isoDate = z
     );
   }, 'not a real calendar date');
 
-export const workSchema = z
+const workSchema = z
   .object({
     /** Employer. `name` in JSON Resume. */
     name: z.string().min(1),
@@ -77,7 +77,7 @@ export const workSchema = z
   })
   .strict();
 
-export const educationSchema = z
+const educationSchema = z
   .object({
     institution: z.string().min(1),
     url: z.url().optional(),
@@ -95,7 +95,7 @@ export const educationSchema = z
  * A skill group ("AI Stack", "Dev Stack"). Keywords are tagged individually so
  * a profile can drop irrelevant tools without dropping the whole group.
  */
-export const skillSchema = z
+const skillSchema = z
   .object({
     name: z.string().min(1),
     level: z.string().optional(),
@@ -104,7 +104,7 @@ export const skillSchema = z
   })
   .strict();
 
-export const languageSchema = z
+const languageSchema = z
   .object({
     language: z.string().min(1),
     fluency: z.string().optional(),
@@ -112,7 +112,7 @@ export const languageSchema = z
   })
   .strict();
 
-export const projectSchema = z
+const projectSchema = z
   .object({
     name: z.string().min(1),
     description: z.string().optional(),
@@ -125,7 +125,7 @@ export const projectSchema = z
   .strict();
 
 /** JSON Resume `basics`. Not taggable — it is on every variant. */
-export const basicsSchema = z
+const basicsSchema = z
   .object({
     name: z.string().min(1),
     label: z.string().optional(),
