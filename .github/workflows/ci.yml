@@ -1,0 +1,67 @@
+name: ci
+
+on:
+  push:
+    branches: ['**']
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+        env:
+          # The browser is installed separately below, with its own cache.
+          PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: '1'
+
+      # Keyed on the lockfile: a Playwright bump invalidates it, nothing else does.
+      - name: Cache Playwright browsers
+        id: playwright-cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
+
+      - name: Install Chromium
+        run: pnpm exec playwright install --with-deps chromium
+
+      - name: Lint
+        run: pnpm lint
+
+      - name: Typecheck
+        run: pnpm typecheck
+
+      - name: Test
+        run: pnpm test
+
+      # The real end-to-end check: the golden test pins composition, this pins
+      # that the theme actually renders and the PDF actually comes out.
+      - name: Build ml-lead
+        run: pnpm vita build ml-lead
+
+      - name: Check the PDF is non-empty
+        run: test -s build/ml-lead/ml-lead.pdf
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ml-lead-cv
+          path: |
+            build/ml-lead/ml-lead.pdf
+            build/ml-lead/index.html
+            build/ml-lead/resume.json
+          if-no-files-found: error
