@@ -1,0 +1,95 @@
+{{!--
+  magazine — full-bleed ink masthead, drop-capped standfirst, then back matter
+  in two columns. The page carries no margin so the band can bleed; every other
+  block opts into `.inset`.
+--}}
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>{{resume.basics.name}}{{#if resume.basics.label}} — {{resume.basics.label}}{{/if}}</title>
+    <style>{{{css}}}</style>
+  </head>
+  <body>
+    <main class="page">
+      <header class="masthead inset">
+        <h1 class="masthead__name">{{resume.basics.name}}</h1>
+        {{#if resume.basics.label}}
+          <p class="masthead__label">{{resume.basics.label}}</p>
+        {{/if}}
+        <ul class="contact">
+          {{#if resume.basics.email}}<li>{{resume.basics.email}}</li>{{/if}}
+          {{#with resume.basics.location}}
+            {{#if city}}<li>{{city}}{{#if countryCode}}, {{countryCode}}{{/if}}</li>{{/if}}
+          {{/with}}
+          {{#if resume.basics.url}}<li>{{hostname resume.basics.url}}</li>{{/if}}
+          {{#each resume.basics.profiles}}
+            <li>{{network}}/{{username}}</li>
+          {{/each}}
+        </ul>
+      </header>
+
+      {{#if resume.basics.summary}}
+        <p class="standfirst inset">{{{md resume.basics.summary}}}</p>
+      {{/if}}
+
+      {{#if resume.work.length}}
+        <section class="section inset">
+          <h2 class="section__title">Experience</h2>
+          {{#each resume.work}}
+            <article class="entry">
+              <h3 class="entry__title">{{position}}</h3>
+              <p class="entry__byline">
+                <strong>{{name}}</strong>
+                · {{dateRange startDate endDate}}{{#if location}} · {{location}}{{/if}}
+              </p>
+              {{#if summary}}<p>{{{md summary}}}</p>{{/if}}
+              {{#if highlights.length}}
+                <ul class="entry__bullets">
+                  {{#each highlights}}<li>{{{md this}}}</li>{{/each}}
+                </ul>
+              {{/if}}
+            </article>
+          {{/each}}
+        </section>
+      {{/if}}
+
+      <div class="back inset">
+        {{#if resume.education.length}}
+          <section>
+            <h2>Education</h2>
+            {{#each resume.education}}
+              <div class="edu">
+                <div>
+                  {{#if studyType}}{{studyType}}{{#if area}} in {{area}}{{/if}}{{else}}{{area}}{{/if}}
+                </div>
+                <div class="edu__where">{{institution}}</div>
+                <div class="edu__when">{{dateRange startDate endDate}}</div>
+              </div>
+            {{/each}}
+          </section>
+        {{/if}}
+
+        {{#each resume.skills}}
+          <section>
+            <h2>{{name}}</h2>
+            <ul class="runon">
+              {{#each keywords}}<li>{{this}}</li>{{/each}}
+            </ul>
+          </section>
+        {{/each}}
+
+        {{#if resume.languages.length}}
+          <section>
+            <h2>Languages</h2>
+            <ul class="pairs">
+              {{#each resume.languages}}
+                <li><span>{{language}}</span><span class="pairs__value">{{fluency}}</span></li>
+              {{/each}}
+            </ul>
+          </section>
+        {{/if}}
+      </div>
+    </main>
+  </body>
+</html>

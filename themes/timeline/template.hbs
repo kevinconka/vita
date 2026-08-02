@@ -1,0 +1,92 @@
+{{!--
+  timeline — work and education share one rail, so the reader follows a single
+  chronology. Skills and languages drop to a footer band off the rail.
+--}}
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>{{resume.basics.name}}{{#if resume.basics.label}} — {{resume.basics.label}}{{/if}}</title>
+    <style>{{{css}}}</style>
+  </head>
+  <body>
+    <main class="page">
+      <header class="masthead">
+        <h1 class="masthead__name">{{resume.basics.name}}</h1>
+        {{#if resume.basics.label}}
+          <p class="masthead__label">{{resume.basics.label}}</p>
+        {{/if}}
+        <ul class="contact">
+          {{#if resume.basics.email}}<li>{{resume.basics.email}}</li>{{/if}}
+          {{#with resume.basics.location}}
+            {{#if city}}<li>{{city}}{{#if countryCode}}, {{countryCode}}{{/if}}</li>{{/if}}
+          {{/with}}
+          {{#if resume.basics.url}}<li>{{hostname resume.basics.url}}</li>{{/if}}
+          {{#each resume.basics.profiles}}
+            <li>{{network}}{{#if username}}/{{username}}{{/if}}</li>
+          {{/each}}
+        </ul>
+        {{#if resume.basics.summary}}
+          <p class="summary">{{{md resume.basics.summary}}}</p>
+        {{/if}}
+      </header>
+
+      {{#if resume.work.length}}
+        <h2 class="section__title">Experience</h2>
+        <div class="rail">
+          {{#each resume.work}}
+            <article class="entry">
+              <span class="entry__date">{{dateRange startDate endDate}}</span>
+              <h3 class="entry__title">
+                {{position}}
+                {{#if name}}<span class="entry__org">{{name}}{{#if location}} · {{location}}{{/if}}</span>{{/if}}
+              </h3>
+              {{#if summary}}<p>{{{md summary}}}</p>{{/if}}
+              {{#if highlights.length}}
+                <ul class="entry__bullets">
+                  {{#each highlights}}<li>{{{md this}}}</li>{{/each}}
+                </ul>
+              {{/if}}
+            </article>
+          {{/each}}
+        </div>
+      {{/if}}
+
+      {{#if resume.education.length}}
+        <h2 class="section__title">Education</h2>
+        <div class="rail">
+          {{#each resume.education}}
+            <article class="entry">
+              <span class="entry__date">{{dateRange startDate endDate}}</span>
+              <h3 class="entry__title">
+                {{#if studyType}}{{studyType}}{{#if area}}, {{area}}{{/if}}{{else}}{{area}}{{/if}}
+                <span class="entry__org">{{institution}}</span>
+              </h3>
+            </article>
+          {{/each}}
+        </div>
+      {{/if}}
+
+      <div class="feet">
+        {{#each resume.skills}}
+          <section>
+            <h2>{{name}}</h2>
+            <ul class="feet__inline">
+              {{#each keywords}}<li>{{this}}</li>{{/each}}
+            </ul>
+          </section>
+        {{/each}}
+        {{#if resume.languages.length}}
+          <section>
+            <h2>Languages</h2>
+            <ul class="pairs">
+              {{#each resume.languages}}
+                <li><span>{{language}}</span><span class="pairs__value">{{fluency}}</span></li>
+              {{/each}}
+            </ul>
+          </section>
+        {{/if}}
+      </div>
+    </main>
+  </body>
+</html>

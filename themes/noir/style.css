@@ -1,0 +1,232 @@
+/*
+ * noir — inverted, margin-labelled.
+ *
+ * Structure, not colour, is the point: every section is a two-track grid whose
+ * left track holds only the label. Content shares one left edge all the way
+ * down the page, and the labels hang outside it. Reads as a reference document
+ * rather than a form.
+ */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+@page {
+  size: var(--page-size);
+  margin: 0;
+}
+
+html {
+  font-size: var(--font-size-base);
+}
+
+body {
+  background: var(--color-background);
+  color: var(--color-text);
+  font-family: var(--font-body);
+  line-height: var(--font-line-height);
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+
+.page {
+  background: var(--color-background);
+  margin: 0 auto;
+  max-width: 210mm;
+  min-height: 297mm;
+  padding: var(--page-margin);
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+strong {
+  font-weight: 600;
+}
+
+code {
+  color: var(--color-accent);
+  font-family: var(--font-label);
+  font-size: 0.9em;
+}
+
+/* --------------------------------------------------------------- masthead */
+
+.masthead {
+  border-bottom: var(--rule-accent-width) solid var(--color-accent);
+  padding-bottom: calc(var(--space-unit) * 5);
+}
+
+.masthead__name {
+  font-family: var(--font-display);
+  font-size: var(--font-name-size);
+  font-weight: var(--font-name-weight);
+  letter-spacing: var(--font-name-tracking);
+  line-height: 0.95;
+  text-transform: uppercase;
+}
+
+.masthead__label {
+  color: var(--color-accent);
+  font-family: var(--font-label);
+  font-size: var(--font-label-size);
+  letter-spacing: var(--font-label-tracking);
+  margin-top: calc(var(--space-unit) * 3);
+  text-transform: uppercase;
+}
+
+.contact {
+  color: var(--color-muted);
+  display: flex;
+  flex-wrap: wrap;
+  font-family: var(--font-label);
+  font-size: var(--font-label-size);
+  gap: calc(var(--space-unit) * 1) calc(var(--space-unit) * 5);
+  list-style: none;
+  margin-top: calc(var(--space-unit) * 4);
+}
+
+/* ---------------------------------------------------------------- section */
+
+/*
+ * The whole idea: label in the margin, content in the measure.
+ * Every section shares the same two tracks, so content aligns down the page.
+ */
+.section {
+  display: grid;
+  gap: 0 calc(var(--space-unit) * 4);
+  grid-template-columns: var(--space-gutter) 1fr;
+  margin-top: var(--space-section);
+}
+
+.section__title {
+  color: var(--color-accent);
+  font-family: var(--font-label);
+  font-size: var(--font-label-size);
+  font-weight: 400;
+  letter-spacing: var(--font-label-tracking);
+  /* Nudge onto the first line's baseline rather than its box top. */
+  padding-top: 0.25em;
+  text-transform: uppercase;
+}
+
+.summary {
+  font-size: 1.08em;
+  grid-column: 2;
+}
+
+/* ------------------------------------------------------------------ entry */
+
+.entry + .entry {
+  margin-top: var(--space-entry);
+}
+
+.entry__head {
+  align-items: baseline;
+  display: flex;
+  gap: calc(var(--space-unit) * 3);
+  justify-content: space-between;
+}
+
+.entry__title {
+  font-size: 1.05em;
+  font-weight: 600;
+  /* Let the title wrap before the date does. */
+  min-width: 0;
+}
+
+.entry__org {
+  color: var(--color-accent);
+}
+
+.entry__meta {
+  color: var(--color-muted);
+  flex-shrink: 0;
+  font-family: var(--font-label);
+  font-size: var(--font-label-size);
+  text-align: right;
+  white-space: nowrap;
+}
+
+.entry__summary {
+  margin-top: calc(var(--space-unit) * 1);
+}
+
+/* No bullet glyphs — a hairline down the left says "list" quietly enough. */
+.entry__bullets {
+  border-left: var(--rule-width) solid var(--color-rule);
+  list-style: none;
+  margin-top: calc(var(--space-unit) * 3);
+  padding-left: calc(var(--space-unit) * 4);
+}
+
+.entry__bullets > li + li {
+  margin-top: var(--space-bullet);
+}
+
+/* ------------------------------------------------------------------- tags */
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: calc(var(--space-unit) * 2);
+  list-style: none;
+}
+
+.tags > li {
+  border: var(--rule-width) solid var(--color-rule);
+  color: var(--color-text);
+  font-family: var(--font-label);
+  font-size: var(--font-label-size);
+  padding: 0.3em 0.6em;
+}
+
+.stack + .stack {
+  margin-top: calc(var(--space-unit) * 3);
+}
+
+.stack__name {
+  color: var(--color-muted);
+  font-family: var(--font-label);
+  font-size: var(--font-label-size);
+  margin-bottom: calc(var(--space-unit) * 2);
+  text-transform: uppercase;
+}
+
+/* -------------------------------------------------------------- key/value */
+
+.pairs {
+  columns: 2;
+  column-gap: calc(var(--space-unit) * 6);
+  list-style: none;
+}
+
+.pairs > li {
+  display: flex;
+  gap: calc(var(--space-unit) * 2);
+  justify-content: space-between;
+}
+
+.pairs__value {
+  color: var(--color-muted);
+  font-family: var(--font-label);
+  font-size: var(--font-label-size);
+}
+
+@media print {
+  .page {
+    max-width: none;
+    min-height: 0;
+  }
+
+  .section,
+  .entry {
+    break-inside: avoid;
+  }
+}

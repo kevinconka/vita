@@ -1,0 +1,111 @@
+{{!--
+  noir — every section is a two-track grid: label in the left margin, content
+  in the measure. Skill groups become named stacks rather than a sidebar.
+--}}
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>{{resume.basics.name}}{{#if resume.basics.label}} — {{resume.basics.label}}{{/if}}</title>
+    <style>{{{css}}}</style>
+  </head>
+  <body>
+    <main class="page">
+      <header class="masthead">
+        <h1 class="masthead__name">{{resume.basics.name}}</h1>
+        {{#if resume.basics.label}}
+          <p class="masthead__label">{{resume.basics.label}}</p>
+        {{/if}}
+        <ul class="contact">
+          {{#if resume.basics.email}}<li>{{resume.basics.email}}</li>{{/if}}
+          {{#with resume.basics.location}}
+            {{#if city}}<li>{{city}}{{#if countryCode}}, {{countryCode}}{{/if}}</li>{{/if}}
+          {{/with}}
+          {{#if resume.basics.url}}<li>{{hostname resume.basics.url}}</li>{{/if}}
+          {{#each resume.basics.profiles}}
+            <li>{{network}}{{#if username}}/{{username}}{{/if}}</li>
+          {{/each}}
+        </ul>
+      </header>
+
+      {{#if resume.basics.summary}}
+        <section class="section">
+          <h2 class="section__title">Profile</h2>
+          <p class="summary">{{{md resume.basics.summary}}}</p>
+        </section>
+      {{/if}}
+
+      {{#if resume.work.length}}
+        <section class="section">
+          <h2 class="section__title">Experience</h2>
+          <div>
+            {{#each resume.work}}
+              <article class="entry">
+                <div class="entry__head">
+                  <h3 class="entry__title">
+                    {{position}}{{#if name}} <span class="entry__org">{{name}}</span>{{/if}}
+                  </h3>
+                  <span class="entry__meta">
+                    {{dateRange startDate endDate}}{{#if location}} · {{location}}{{/if}}
+                  </span>
+                </div>
+                {{#if summary}}<p class="entry__summary">{{{md summary}}}</p>{{/if}}
+                {{#if highlights.length}}
+                  <ul class="entry__bullets">
+                    {{#each highlights}}<li>{{{md this}}}</li>{{/each}}
+                  </ul>
+                {{/if}}
+              </article>
+            {{/each}}
+          </div>
+        </section>
+      {{/if}}
+
+      {{#if resume.skills.length}}
+        <section class="section">
+          <h2 class="section__title">Stack</h2>
+          <div>
+            {{#each resume.skills}}
+              <div class="stack">
+                <p class="stack__name">{{name}}</p>
+                <ul class="tags">
+                  {{#each keywords}}<li>{{this}}</li>{{/each}}
+                </ul>
+              </div>
+            {{/each}}
+          </div>
+        </section>
+      {{/if}}
+
+      {{#if resume.education.length}}
+        <section class="section">
+          <h2 class="section__title">Education</h2>
+          <div>
+            {{#each resume.education}}
+              <article class="entry">
+                <div class="entry__head">
+                  <h3 class="entry__title">
+                    {{#if studyType}}{{studyType}}{{#if area}}, {{area}}{{/if}}{{else}}{{area}}{{/if}}
+                    <span class="entry__org">{{institution}}</span>
+                  </h3>
+                  <span class="entry__meta">{{dateRange startDate endDate}}</span>
+                </div>
+              </article>
+            {{/each}}
+          </div>
+        </section>
+      {{/if}}
+
+      {{#if resume.languages.length}}
+        <section class="section">
+          <h2 class="section__title">Languages</h2>
+          <ul class="pairs">
+            {{#each resume.languages}}
+              <li><span>{{language}}</span><span class="pairs__value">{{fluency}}</span></li>
+            {{/each}}
+          </ul>
+        </section>
+      {{/if}}
+    </main>
+  </body>
+</html>

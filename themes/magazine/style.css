@@ -1,0 +1,271 @@
+/*
+ * magazine — a masthead, a standfirst, then columns.
+ *
+ * The page margin is zero so the ink band can bleed to the paper edge; every
+ * other block is inset by hand. The name is set at magazine scale and allowed
+ * to dominate, on the theory that a CV's first job is to be remembered.
+ * Skills run as prose in columns rather than as chips, because chips are a UI
+ * pattern and this is meant to read as print.
+ */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+@page {
+  size: var(--page-size);
+  margin: var(--page-margin);
+}
+
+html {
+  font-size: var(--font-size-base);
+}
+
+body {
+  background: var(--color-background);
+  color: var(--color-ink);
+  font-family: var(--font-body);
+  line-height: var(--font-line-height);
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+
+.page {
+  background: var(--color-background);
+  margin: 0 auto;
+  max-width: 210mm;
+  min-height: 297mm;
+  padding-bottom: var(--page-inset);
+}
+
+.inset {
+  padding-left: var(--page-inset);
+  padding-right: var(--page-inset);
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+code {
+  font-family: var(--font-label);
+  font-size: 0.88em;
+}
+
+/* --------------------------------------------------------------- masthead */
+
+/* Full-bleed ink band. The page has no margin so this can reach the edges. */
+.masthead {
+  background: var(--color-band);
+  color: var(--color-band-text);
+  padding-bottom: var(--space-band-pad);
+  padding-top: var(--space-band-pad);
+}
+
+.masthead__name {
+  font-family: var(--font-display);
+  font-size: var(--font-name-size);
+  font-weight: var(--font-name-weight);
+  letter-spacing: var(--font-name-tracking);
+  line-height: 0.86;
+}
+
+.masthead__label {
+  border-top: var(--rule-width) solid rgb(255 255 255 / 25%);
+  font-family: var(--font-label);
+  font-size: var(--font-label-size);
+  font-weight: 600;
+  letter-spacing: var(--font-label-tracking);
+  margin-top: calc(var(--space-unit) * 4);
+  padding-top: calc(var(--space-unit) * 3);
+  text-transform: uppercase;
+}
+
+.contact {
+  color: rgb(255 255 255 / 62%);
+  display: flex;
+  flex-wrap: wrap;
+  font-family: var(--font-label);
+  font-size: var(--font-label-size);
+  gap: calc(var(--space-unit) * 1) calc(var(--space-unit) * 4);
+  list-style: none;
+  margin-top: calc(var(--space-unit) * 2);
+}
+
+/* ------------------------------------------------------------- standfirst */
+
+.standfirst {
+  border-bottom: var(--rule-heavy) solid var(--color-ink);
+  font-size: 1.22em;
+  line-height: 1.42;
+  padding-bottom: calc(var(--space-unit) * 5);
+  padding-top: calc(var(--space-unit) * 6);
+}
+
+.standfirst::first-letter {
+  color: var(--color-accent);
+  float: left;
+  font-family: var(--font-display);
+  font-size: var(--dropcap-size);
+  font-weight: 900;
+  line-height: 0.82;
+  padding-right: 0.06em;
+}
+
+/* ---------------------------------------------------------------- section */
+
+.section {
+  padding-top: var(--space-section);
+}
+
+.section__title {
+  border-bottom: var(--rule-width) solid var(--color-rule);
+  color: var(--color-accent);
+  font-family: var(--font-label);
+  font-size: var(--font-label-size);
+  font-weight: 700;
+  letter-spacing: var(--font-label-tracking);
+  margin-bottom: calc(var(--space-unit) * 4);
+  padding-bottom: calc(var(--space-unit) * 2);
+  text-transform: uppercase;
+}
+
+/* ------------------------------------------------------------------ entry */
+
+.entry + .entry {
+  margin-top: var(--space-entry);
+}
+
+/* Role as a headline, employer as a byline beneath it. */
+.entry__title {
+  font-family: var(--font-display);
+  font-size: 1.35em;
+  font-weight: 700;
+  line-height: 1.15;
+}
+
+.entry__byline {
+  color: var(--color-muted);
+  font-family: var(--font-label);
+  font-size: var(--font-label-size);
+  letter-spacing: 0.08em;
+  margin-top: calc(var(--space-unit) * 1);
+  text-transform: uppercase;
+}
+
+.entry__byline strong {
+  color: var(--color-accent);
+  font-weight: 700;
+}
+
+.entry__bullets {
+  list-style: none;
+  margin-top: calc(var(--space-unit) * 2);
+}
+
+.entry__bullets > li {
+  padding-left: 0.95em;
+  position: relative;
+  text-indent: 0;
+}
+
+.entry__bullets > li + li {
+  margin-top: var(--space-bullet);
+}
+
+.entry__bullets > li::before {
+  color: var(--color-accent);
+  content: '§';
+  font-size: 0.8em;
+  left: 0;
+  position: absolute;
+  top: 0.15em;
+}
+
+/* ------------------------------------------------------------------- back */
+
+/* Back matter runs in two columns, like a magazine's endnotes. */
+.back {
+  columns: 2;
+  column-gap: calc(var(--space-unit) * 8);
+  column-rule: var(--rule-width) solid var(--color-rule);
+  padding-top: var(--space-section);
+}
+
+.back > section {
+  break-inside: avoid;
+}
+
+.back > section + section {
+  margin-top: calc(var(--space-unit) * 4);
+}
+
+.back h2 {
+  font-family: var(--font-label);
+  font-size: var(--font-label-size);
+  font-weight: 700;
+  letter-spacing: var(--font-label-tracking);
+  margin-bottom: calc(var(--space-unit) * 1);
+  text-transform: uppercase;
+}
+
+/* Skills as running text, not chips. */
+.runon {
+  list-style: none;
+}
+
+.runon > li {
+  display: inline;
+}
+
+.runon > li:not(:last-child)::after {
+  color: var(--color-muted);
+  content: ', ';
+}
+
+.pairs {
+  list-style: none;
+}
+
+.pairs > li {
+  display: flex;
+  gap: calc(var(--space-unit) * 2);
+  justify-content: space-between;
+}
+
+.pairs__value {
+  color: var(--color-muted);
+  font-family: var(--font-label);
+  font-size: 0.86em;
+}
+
+.edu + .edu {
+  margin-top: calc(var(--space-unit) * 2);
+}
+
+.edu__where {
+  color: var(--color-accent);
+}
+
+.edu__when {
+  color: var(--color-muted);
+  font-family: var(--font-label);
+  font-size: 0.82em;
+}
+
+@media print {
+  .page {
+    max-width: none;
+    min-height: 0;
+  }
+
+  .entry,
+  .back > section {
+    break-inside: avoid;
+  }
+}

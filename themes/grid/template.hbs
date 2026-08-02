@@ -1,0 +1,107 @@
+{{!--
+  grid — every block is a bordered cell on a graph ground. Stack and languages
+  pair into a two-up band; experience gets a full-width cell.
+--}}
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>{{resume.basics.name}}{{#if resume.basics.label}} — {{resume.basics.label}}{{/if}}</title>
+    <style>{{{css}}}</style>
+  </head>
+  <body>
+    <main class="page">
+      <header class="cell masthead">
+        <h1 class="masthead__name">{{resume.basics.name}}</h1>
+        {{#if resume.basics.label}}
+          <p class="masthead__label">{{resume.basics.label}}</p>
+        {{/if}}
+        <ul class="contact">
+          {{#if resume.basics.email}}<li>{{resume.basics.email}}</li>{{/if}}
+          {{#with resume.basics.location}}
+            {{#if city}}<li>{{city}}{{#if countryCode}}, {{countryCode}}{{/if}}</li>{{/if}}
+          {{/with}}
+          {{#if resume.basics.url}}<li>{{hostname resume.basics.url}}</li>{{/if}}
+          {{#each resume.basics.profiles}}
+            <li>{{network}}{{#if username}}/{{username}}{{/if}}</li>
+          {{/each}}
+        </ul>
+      </header>
+
+      {{#if resume.basics.summary}}
+        <section class="cell">
+          <span class="cell__label">00 · Profile</span>
+          <p>{{{md resume.basics.summary}}}</p>
+        </section>
+      {{/if}}
+
+      {{#if resume.work.length}}
+        <section class="cell">
+          <span class="cell__label">01 · Experience</span>
+          {{#each resume.work}}
+            <article class="entry">
+              <div class="entry__head">
+                <h3 class="entry__title">
+                  {{position}}{{#if name}} / <span class="entry__org">{{name}}</span>{{/if}}
+                </h3>
+                <span class="entry__meta">
+                  {{dateRange startDate endDate}}{{#if location}} · {{location}}{{/if}}
+                </span>
+              </div>
+              {{#if summary}}<p>{{{md summary}}}</p>{{/if}}
+              {{#if highlights.length}}
+                <ul class="entry__bullets">
+                  {{#each highlights}}<li>{{{md this}}}</li>{{/each}}
+                </ul>
+              {{/if}}
+            </article>
+          {{/each}}
+        </section>
+      {{/if}}
+
+      <div class="band">
+        {{#if resume.skills.length}}
+          <section class="cell">
+            <span class="cell__label">02 · Stack</span>
+            {{#each resume.skills}}
+              <div class="stack">
+                <p class="stack__name">{{name}}</p>
+                <ul class="tags">
+                  {{#each keywords}}<li>{{this}}</li>{{/each}}
+                </ul>
+              </div>
+            {{/each}}
+          </section>
+        {{/if}}
+
+        <section class="cell">
+          {{#if resume.education.length}}
+            <span class="cell__label">03 · Education</span>
+            {{#each resume.education}}
+              <article class="entry">
+                <div class="entry__head">
+                  <h3 class="entry__title">
+                    {{#if studyType}}{{studyType}}{{#if area}} / {{area}}{{/if}}{{else}}{{area}}{{/if}}
+                  </h3>
+                  <span class="entry__meta">{{dateRange startDate endDate}}</span>
+                </div>
+                <p class="entry__org">{{institution}}</p>
+              </article>
+            {{/each}}
+          {{/if}}
+
+          {{#if resume.languages.length}}
+            <div class="stack">
+              <p class="stack__name">Languages</p>
+              <ul class="pairs">
+                {{#each resume.languages}}
+                  <li><span>{{language}}</span><span class="pairs__value">{{fluency}}</span></li>
+                {{/each}}
+              </ul>
+            </div>
+          {{/if}}
+        </section>
+      </div>
+    </main>
+  </body>
+</html>
