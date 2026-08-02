@@ -1,0 +1,59 @@
+{
+  "$comment": "Vivid — the altacv purple carried over, used only on headings, rules and bullet markers. Restrained accent on a single-column body: the one place 2026 guidance still allows colour is section headings and detail.",
+
+  "color": {
+    "background": "#ffffff",
+    "surface": "#f5f1ff",
+    "text": "#2e2e2e",
+    "muted": "#666666",
+    "accent": "#3e0097",
+    "accent-contrast": "#ffffff",
+    "rule": "#e4dcf7",
+    "link": "#3e0097"
+  },
+
+  "font": {
+    "body": "'Lato', 'Helvetica Neue', Helvetica, Arial, sans-serif",
+    "heading": "'Lato', 'Helvetica Neue', Helvetica, Arial, sans-serif",
+    "mono": "'JetBrains Mono', ui-monospace, Menlo, monospace",
+    "size-base": "10pt",
+    "scale-ratio": "1.25",
+    "line-height": "1.5",
+    "weight-body": "400",
+    "weight-heading": "700",
+    "heading-transform": "uppercase",
+    "heading-tracking": "0.1em"
+  },
+
+  "space": {
+    "unit": "0.25rem",
+    "section": "1.6rem",
+    "entry": "0.95rem",
+    "bullet": "0.3rem",
+    "column-gap": "1.8rem"
+  },
+
+  "page": {
+    "size": "A4",
+    "margin": "14mm",
+    "columns": "0.62fr 0.38fr"
+  },
+
+  "rule": {
+    "width": "3px",
+    "section-gap": "0.35rem"
+  },
+
+  "tag": {
+    "background": "#f5f1ff",
+    "color": "#3e0097",
+    "radius": "3px",
+    "padding": "0.15em 0.55em"
+  },
+
+  "avatar": {
+    "size": "22mm",
+    "radius": "50%",
+    "border-width": "2px"
+  }
+}

@@ -140,8 +140,9 @@ Worth knowing:
 
 - `font.scale-ratio` drives the whole type scale; `font.size-base` drives
   absolute size. Adjust those two before touching anything else.
-- `page.main-width` / `page.sidebar-width` are grid fractions — set the sidebar
-  to `0fr` for a single-column CV.
+- `page.columns` is the CSS grid track list for the body. `0.66fr 0.34fr` gives
+  the two-column layout; `1fr` gives a single-column CV, with the sidebar
+  sections flowing underneath the main ones.
 - Fonts are referenced by family name, not downloaded. Rendering is offline by
   design, so name families the render machine has installed.
 

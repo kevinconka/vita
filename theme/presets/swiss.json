@@ -1,0 +1,52 @@
+{
+  "$comment": "Swiss \u2014 single column, near-black on white, one hairline rule per section. Nothing carries meaning except type size and space. The 2026 default: no decoration, no second colour, ATS-safe by construction. Note: with a single grid track the gap token becomes the ROW gap between main and the sidebar sections, so it must not be zero.",
+  "color": {
+    "background": "#ffffff",
+    "surface": "#fafafa",
+    "text": "#0a0a0a",
+    "muted": "#737373",
+    "accent": "#0a0a0a",
+    "accent-contrast": "#ffffff",
+    "rule": "#d4d4d4",
+    "link": "#0a0a0a"
+  },
+  "font": {
+    "body": "'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif",
+    "heading": "'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif",
+    "mono": "'JetBrains Mono', ui-monospace, Menlo, monospace",
+    "size-base": "10pt",
+    "scale-ratio": "1.22",
+    "line-height": "1.5",
+    "weight-body": "400",
+    "weight-heading": "700",
+    "heading-transform": "uppercase",
+    "heading-tracking": "0.14em"
+  },
+  "space": {
+    "unit": "0.25rem",
+    "section": "1.9rem",
+    "entry": "1.05rem",
+    "bullet": "0.35rem",
+    "column-gap": "1.9rem"
+  },
+  "page": {
+    "size": "A4",
+    "margin": "16mm",
+    "columns": "1fr"
+  },
+  "rule": {
+    "width": "1px",
+    "section-gap": "0.4rem"
+  },
+  "tag": {
+    "background": "transparent",
+    "color": "#0a0a0a",
+    "radius": "0",
+    "padding": "0 0.55em 0 0"
+  },
+  "avatar": {
+    "size": "0",
+    "radius": "0",
+    "border-width": "0"
+  }
+}

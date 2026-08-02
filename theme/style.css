@@ -137,10 +137,15 @@ code {
 
 /* ---------------------------------------------------------------- columns */
 
+/*
+ * One token holds the whole track list, so a preset can switch between a
+ * two-column CV (`0.66fr 0.34fr`) and a single-column one (`1fr`) without
+ * touching this file. With a single track the sidebar simply flows underneath.
+ */
 .columns {
   display: grid;
   gap: var(--space-column-gap);
-  grid-template-columns: var(--page-main-width) var(--page-sidebar-width);
+  grid-template-columns: var(--page-columns);
   margin-top: var(--space-section);
 }
 

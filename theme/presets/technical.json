@@ -1,0 +1,59 @@
+{
+  "$comment": "Technical — dense two-column, monospace section labels and tags, tight leading. Fits more evidence on one page, which is the actual constraint for an engineer with a long stack. Cool neutrals, single blue accent.",
+
+  "color": {
+    "background": "#ffffff",
+    "surface": "#f1f5f9",
+    "text": "#0f172a",
+    "muted": "#64748b",
+    "accent": "#0369a1",
+    "accent-contrast": "#ffffff",
+    "rule": "#e2e8f0",
+    "link": "#0369a1"
+  },
+
+  "font": {
+    "body": "'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif",
+    "heading": "'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, monospace",
+    "mono": "'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, monospace",
+    "size-base": "9.5pt",
+    "scale-ratio": "1.16",
+    "line-height": "1.4",
+    "weight-body": "400",
+    "weight-heading": "600",
+    "heading-transform": "lowercase",
+    "heading-tracking": "0.02em"
+  },
+
+  "space": {
+    "unit": "0.22rem",
+    "section": "1.35rem",
+    "entry": "0.72rem",
+    "bullet": "0.25rem",
+    "column-gap": "1.5rem"
+  },
+
+  "page": {
+    "size": "A4",
+    "margin": "12mm",
+    "columns": "0.7fr 0.3fr"
+  },
+
+  "rule": {
+    "width": "2px",
+    "section-gap": "0.28rem"
+  },
+
+  "tag": {
+    "background": "#f1f5f9",
+    "color": "#0f172a",
+    "radius": "2px",
+    "padding": "0.1em 0.4em"
+  },
+
+  "avatar": {
+    "size": "18mm",
+    "radius": "2px",
+    "border-width": "0"
+  }
+}

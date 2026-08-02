@@ -1,0 +1,59 @@
+{
+  "$comment": "Editorial — geometric sans body with a serif display name, warm paper ground. The 'subtle serif accent' pairing that shows up across 2026 CV writing: character from typography, not from colour.",
+
+  "color": {
+    "background": "#fdfcfa",
+    "surface": "#f4f1ec",
+    "text": "#1c1917",
+    "muted": "#78716c",
+    "accent": "#7c2d12",
+    "accent-contrast": "#fdfcfa",
+    "rule": "#e0dbd2",
+    "link": "#7c2d12"
+  },
+
+  "font": {
+    "body": "'Source Sans 3', 'Helvetica Neue', Helvetica, Arial, sans-serif",
+    "heading": "'Source Serif 4', Georgia, 'Times New Roman', serif",
+    "mono": "'JetBrains Mono', ui-monospace, Menlo, monospace",
+    "size-base": "10.5pt",
+    "scale-ratio": "1.28",
+    "line-height": "1.55",
+    "weight-body": "400",
+    "weight-heading": "600",
+    "heading-transform": "none",
+    "heading-tracking": "0"
+  },
+
+  "space": {
+    "unit": "0.25rem",
+    "section": "1.7rem",
+    "entry": "1rem",
+    "bullet": "0.32rem",
+    "column-gap": "2rem"
+  },
+
+  "page": {
+    "size": "A4",
+    "margin": "15mm",
+    "columns": "0.68fr 0.32fr"
+  },
+
+  "rule": {
+    "width": "1px",
+    "section-gap": "0.3rem"
+  },
+
+  "tag": {
+    "background": "#f4f1ec",
+    "color": "#57534e",
+    "radius": "2px",
+    "padding": "0.15em 0.55em"
+  },
+
+  "avatar": {
+    "size": "20mm",
+    "radius": "2px",
+    "border-width": "0"
+  }
+}
