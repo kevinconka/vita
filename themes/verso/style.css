@@ -1,0 +1,364 @@
+/*
+ * verso — see DESIGN.md in this directory for the reasoning. The short version:
+ *
+ *   - Bento grid, 12 columns, 5px gutter. Cells are tiles of one surface, so
+ *     they are distinguished by FILL (4% lighter than the paper) and never by
+ *     a border. Adding an outline doubles the noise for no extra information.
+ *   - Type-as-hero. The name runs ~7:1 against body copy. That ratio is the
+ *     design; softening it turns the poster back into a document.
+ *   - One accent, rationed: the role line, one filled cell, the rule above each
+ *     label. Never on employers — they repeat, and the accent must not become
+ *     a texture.
+ *   - Instrument Serif Italic appears exactly once, on the summary, which is
+ *     set as a pull quote rather than a paragraph.
+ */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+@page {
+  size: var(--page-size);
+  margin: var(--page-margin);
+}
+
+html {
+  font-size: var(--font-size-base);
+}
+
+body {
+  background: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-display);
+  font-weight: 400;
+  line-height: var(--font-line-height);
+  -webkit-font-smoothing: antialiased;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+
+.page {
+  background: var(--color-paper);
+  display: grid;
+  gap: var(--space-gap);
+  /* Twelve columns so an 8/4 split is exact rather than approximated. */
+  grid-template-columns: repeat(12, 1fr);
+  margin: 0 auto;
+  max-width: 210mm;
+  padding: var(--page-margin);
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+code {
+  font-family: var(--font-data);
+  font-size: 0.9em;
+}
+
+/* ------------------------------------------------------------------- cell */
+
+.cell {
+  background: var(--color-card);
+  border-radius: var(--radius-card);
+  padding: var(--space-md);
+}
+
+.cell--wide {
+  grid-column: span 12;
+}
+
+/*
+ * Experience is the tall cell: eight columns and three rows, so the right rail
+ * stacks three cells alongside it and the bottom edge of the grid comes out
+ * flush. Without the row span the rail cells each claim a full row of their
+ * own and the last one leaves four columns of dead paper.
+ */
+.cell--main {
+  grid-column: span 8;
+  grid-row: span 3;
+}
+
+.cell--side {
+  grid-column: span 4;
+}
+
+.cell--accent {
+  background: var(--color-vermillion);
+  color: var(--color-on-vermillion);
+}
+
+.cell--ink {
+  background: var(--color-ink);
+  color: var(--color-paper);
+}
+
+/* ---------------------------------------------------------------- masthead */
+
+.masthead {
+  align-items: end;
+  display: grid;
+  gap: var(--space-md);
+  grid-template-columns: 1fr auto;
+  padding: var(--space-lg) var(--space-md) var(--space-md);
+}
+
+/*
+ * The hero. Allowed — encouraged — to break to two lines: stacked reads
+ * stronger than shrunk, and the tight tracking only pays off at this size.
+ */
+.hero {
+  font-size: var(--font-hero-size);
+  font-weight: var(--font-hero-weight);
+  letter-spacing: var(--font-hero-tracking);
+  line-height: 0.86;
+  text-transform: uppercase;
+}
+
+.hero__role {
+  color: var(--color-vermillion);
+  font-size: var(--font-role-size);
+  font-weight: var(--font-role-weight);
+  letter-spacing: var(--font-role-tracking);
+  line-height: 1.15;
+  margin-top: var(--space-sm);
+  text-transform: none;
+}
+
+.contact {
+  color: var(--color-faint);
+  font-family: var(--font-data);
+  font-size: var(--font-data-size);
+  list-style: none;
+  text-align: right;
+}
+
+.contact > li + li {
+  margin-top: 0.15em;
+}
+
+/* ------------------------------------------------------------------ label */
+
+/* A short vermillion rule sits above every label — the accent as punctuation. */
+.label {
+  color: var(--color-faint);
+  font-family: var(--font-data);
+  font-size: var(--font-label-size);
+  letter-spacing: var(--font-label-tracking);
+  padding-top: var(--space-sm);
+  position: relative;
+  text-transform: uppercase;
+}
+
+.label::before {
+  background: var(--color-vermillion);
+  content: '';
+  height: var(--rule-width);
+  left: 0;
+  position: absolute;
+  top: 0;
+  width: 18px;
+}
+
+.cell--accent .label,
+.cell--ink .label {
+  color: currentcolor;
+  opacity: 0.72;
+}
+
+.cell--accent .label::before,
+.cell--ink .label::before {
+  background: currentcolor;
+}
+
+/* ------------------------------------------------------------------ quote */
+
+/*
+ * The one italic on the page. One sentence only — two makes it a paragraph
+ * and the face starts to fatigue.
+ */
+.quote {
+  font-family: var(--font-quote);
+  font-size: var(--font-quote-size);
+  font-style: italic;
+  line-height: 1.22;
+  margin-top: var(--space-sm);
+}
+
+/* ------------------------------------------------------------------ entry */
+
+.entry {
+  padding-top: var(--space-md);
+}
+
+.entry + .entry {
+  border-top: 1px solid var(--color-hairline);
+  margin-top: var(--space-md);
+}
+
+.entry__head {
+  align-items: baseline;
+  display: flex;
+  gap: var(--space-sm);
+  justify-content: space-between;
+}
+
+.entry__role {
+  font-size: var(--font-headline-size);
+  font-weight: var(--font-headline-weight);
+  letter-spacing: var(--font-headline-tracking);
+  line-height: 1.15;
+  min-width: 0;
+}
+
+.entry__org {
+  color: var(--color-graphite);
+  display: block;
+  font-size: 0.72em;
+  font-weight: 500;
+  letter-spacing: 0;
+}
+
+.entry__when {
+  color: var(--color-faint);
+  flex-shrink: 0;
+  font-family: var(--font-data);
+  font-size: var(--font-data-size);
+  text-align: right;
+  white-space: nowrap;
+}
+
+.entry__notes {
+  list-style: none;
+  margin-top: var(--space-sm);
+}
+
+.entry__notes > li {
+  padding-left: var(--space-md);
+  position: relative;
+}
+
+.entry__notes > li + li {
+  margin-top: 0.28em;
+}
+
+/* Mono index numbers rather than dots — data, set as data. */
+.entry__notes {
+  counter-reset: note;
+}
+
+.entry__notes > li::before {
+  color: var(--color-faint);
+  content: counter(note, decimal-leading-zero);
+  counter-increment: note;
+  font-family: var(--font-data);
+  font-size: 0.72em;
+  left: 0;
+  position: absolute;
+  top: 0.3em;
+}
+
+/* ------------------------------------------------------------------ chips */
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-xs);
+  list-style: none;
+  margin-top: var(--space-sm);
+}
+
+.chips > li {
+  background: var(--color-paper);
+  border-radius: var(--radius-chip);
+  font-size: 0.9em;
+  padding: 0.16em 0.45em;
+}
+
+.group + .group {
+  margin-top: var(--space-md);
+}
+
+.group__name {
+  color: var(--color-faint);
+  font-family: var(--font-data);
+  font-size: var(--font-data-size);
+}
+
+/* ------------------------------------------------------------------- misc */
+
+.edu {
+  margin-top: var(--space-sm);
+}
+
+.edu__what {
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.edu__where {
+  color: var(--color-graphite);
+}
+
+.edu__when {
+  color: var(--color-faint);
+  font-family: var(--font-data);
+  font-size: var(--font-data-size);
+}
+
+.pairs {
+  list-style: none;
+  margin-top: var(--space-sm);
+}
+
+.pairs > li {
+  display: flex;
+  gap: var(--space-sm);
+  justify-content: space-between;
+}
+
+.pairs__value {
+  color: var(--color-faint);
+  font-family: var(--font-data);
+  font-size: var(--font-data-size);
+}
+
+/* ------------------------------------------------------- filled-cell text */
+
+/*
+ * graphite and faint are tuned for the paper. On the ink and vermillion cells
+ * they fall to roughly 2:1, so everything there derives from currentcolor
+ * instead.
+ */
+.cell--ink .edu__where,
+.cell--accent .edu__where {
+  color: currentcolor;
+  opacity: 0.78;
+}
+
+.cell--ink .edu__when,
+.cell--ink .group__name,
+.cell--ink .pairs__value,
+.cell--accent .edu__when,
+.cell--accent .group__name,
+.cell--accent .pairs__value {
+  color: currentcolor;
+  opacity: 0.6;
+}
+
+@media print {
+  .page {
+    max-width: none;
+    padding: 0;
+  }
+
+  .cell {
+    break-inside: avoid;
+  }
+}

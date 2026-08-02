@@ -1,0 +1,100 @@
+{{!--
+  verso — bento. Masthead spans all twelve; experience takes eight; the right
+  column stacks quote, stack and education in fours.
+--}}
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>{{resume.basics.name}}{{#if resume.basics.label}} — {{resume.basics.label}}{{/if}}</title>
+    <style>{{{css}}}</style>
+  </head>
+  <body>
+    <main class="page">
+      <header class="cell cell--wide masthead">
+        <div>
+          <h1 class="hero">{{resume.basics.name}}</h1>
+          {{#if resume.basics.label}}
+            <p class="hero__role">{{resume.basics.label}}</p>
+          {{/if}}
+        </div>
+        <ul class="contact">
+          {{#if resume.basics.email}}<li>{{resume.basics.email}}</li>{{/if}}
+          {{#with resume.basics.location}}
+            {{#if city}}<li>{{city}}{{#if countryCode}}, {{countryCode}}{{/if}}</li>{{/if}}
+          {{/with}}
+          {{#if resume.basics.url}}<li>{{hostname resume.basics.url}}</li>{{/if}}
+          {{#each resume.basics.profiles}}
+            <li>{{network}}/{{username}}</li>
+          {{/each}}
+        </ul>
+      </header>
+
+      {{#if resume.work.length}}
+        <section class="cell cell--main">
+          <p class="label">Experience</p>
+          {{#each resume.work}}
+            <article class="entry">
+              <div class="entry__head">
+                <h3 class="entry__role">
+                  {{position}}
+                  {{#if name}}<span class="entry__org">{{name}}{{#if location}} · {{location}}{{/if}}</span>{{/if}}
+                </h3>
+                <span class="entry__when">{{dateRange startDate endDate}}</span>
+              </div>
+              {{#if highlights.length}}
+                <ul class="entry__notes">
+                  {{#each highlights}}<li>{{{md this}}}</li>{{/each}}
+                </ul>
+              {{/if}}
+            </article>
+          {{/each}}
+        </section>
+      {{/if}}
+
+      <div class="cell cell--side cell--accent">
+        <p class="label">Profile</p>
+        {{#if resume.basics.summary}}
+          <p class="quote">{{{md resume.basics.summary}}}</p>
+        {{/if}}
+      </div>
+
+      {{#if resume.skills.length}}
+        <section class="cell cell--side">
+          <p class="label">Stack</p>
+          {{#each resume.skills}}
+            <div class="group">
+              <p class="group__name">{{name}}</p>
+              <ul class="chips">
+                {{#each keywords}}<li>{{this}}</li>{{/each}}
+              </ul>
+            </div>
+          {{/each}}
+        </section>
+      {{/if}}
+
+      <section class="cell cell--side cell--ink">
+        {{#if resume.education.length}}
+          <p class="label">Education</p>
+          {{#each resume.education}}
+            <div class="edu">
+              <div class="edu__what">
+                {{#if studyType}}{{studyType}}{{#if area}}, {{area}}{{/if}}{{else}}{{area}}{{/if}}
+              </div>
+              <div class="edu__where">{{institution}}</div>
+              <div class="edu__when">{{dateRange startDate endDate}}</div>
+            </div>
+          {{/each}}
+        {{/if}}
+
+        {{#if resume.languages.length}}
+          <ul class="pairs">
+            {{#each resume.languages}}
+              <li><span>{{language}}</span><span class="pairs__value">{{fluency}}</span></li>
+            {{/each}}
+          </ul>
+        {{/if}}
+      </section>
+    </main>
+  </body>
+</html>
