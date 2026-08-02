@@ -1,0 +1,112 @@
+{
+  "$schema": "https://raw.githubusercontent.com/jsonresume/resume-schema/v1.0.0/schema.json",
+  "basics": {
+    "name": "Robin Vega",
+    "label": "Head of AI — Computer Vision & Real-Time Perception",
+    "email": "robin.vega@example.com",
+    "url": "https://example.com",
+    "summary": "Computer-vision lead. I own the path from dataset to a model running in real time on the box, and I build the evaluation harness that proves it works.",
+    "location": {
+      "city": "Vienna",
+      "countryCode": "AT",
+      "region": "Wien"
+    }
+  },
+  "work": [
+    {
+      "name": "Northwind Perception GmbH",
+      "position": "Head of AI",
+      "url": "https://example.com",
+      "location": "Vienna, AT",
+      "startDate": "2024-07",
+      "highlights": [
+        "Drive the AI roadmap so computer-vision initiatives line up with product goals and real field feedback.",
+        "Built an evaluation pipeline that feeds real recordings through the production system end to end and scores the output with a custom metrics engine, measuring exactly what the user sees.",
+        "Own AI-related feedback from the field and from other departments, turning it into concrete improvements to models, data and evaluation.",
+        "Unified the AI architecture across products — cutting duplicated inference code and shortening deployment cycles",
+        "Defined CI/CD and Python standards across the team — `uv`, `ruff` and GitHub Actions — so every repo lints, tests and ships the same way."
+      ]
+    },
+    {
+      "name": "Northwind Perception GmbH",
+      "position": "AI/ML Engineer",
+      "location": "Linz, AT",
+      "startDate": "2019-01",
+      "endDate": "2024-06",
+      "highlights": [
+        "Improved multi-object-tracking quality through analytical Kalman filter tuning and automated hyper-parameter search — +20% HOTA and +32% association accuracy, with 26% fewer false positives and 25% fewer ID switches",
+        "Cut false positives 12x by making a visual dataset-curation tool a core part of the team's data workflow.",
+        "Raised inference throughput on NVIDIA Jetson by fusing pre-processing into the model graph with PyTorch hooks and exporting to TensorRT.",
+        "Built a YOLO-based end-to-end horizon detection model that runs in real time with almost no post-processing.",
+        "Extended the YOLO training pipeline with thermal-specific augmentations to generalise across LWIR camera models."
+      ]
+    }
+  ],
+  "education": [
+    {
+      "institution": "Johannes Kepler Universität",
+      "area": "Artificial Intelligence",
+      "studyType": "M.Sc.",
+      "startDate": "2022-09"
+    },
+    {
+      "institution": "École Centrale de Nantes & Università degli Studi di Genova",
+      "area": "Advanced Robotics",
+      "studyType": "M.Sc.",
+      "startDate": "2016-09",
+      "endDate": "2018-10"
+    }
+  ],
+  "skills": [
+    {
+      "name": "AI Stack",
+      "keywords": [
+        "PyTorch",
+        "TensorRT",
+        "ONNX",
+        "Hugging Face",
+        "OpenCV",
+        "FiftyOne",
+        "Weights & Biases"
+      ]
+    },
+    {
+      "name": "Dev Stack",
+      "keywords": [
+        "Python",
+        "C++",
+        "Docker",
+        "GitHub Actions",
+        "uv",
+        "Claude Code",
+        "Linux"
+      ]
+    }
+  ],
+  "languages": [
+    {
+      "language": "English",
+      "fluency": "Fluent"
+    },
+    {
+      "language": "Spanish",
+      "fluency": "Native"
+    },
+    {
+      "language": "French",
+      "fluency": "Working proficiency"
+    },
+    {
+      "language": "German",
+      "fluency": "Conversational"
+    },
+    {
+      "language": "Italian",
+      "fluency": "Conversational"
+    }
+  ],
+  "meta": {
+    "profile": "ml-lead",
+    "profileName": "ML Lead"
+  }
+}

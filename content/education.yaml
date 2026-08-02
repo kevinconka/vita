@@ -2,7 +2,6 @@ education:
   - institution: Johannes Kepler Universität
     area: Artificial Intelligence
     studyType: M.Sc.
-    location: Linz, AT
     startDate: '2022-09'
     tags: [ml, current]
     priority: 100
