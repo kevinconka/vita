@@ -70,7 +70,7 @@ jobs:
       # `id-token: write` on the job and `use_oidc: true` here, and it buys
       # nothing over a token for a public repo.
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v5
+        uses: codecov/codecov-action@v7
         with:
           files: ./coverage/lcov.info
           token: ${{ secrets.CODECOV_TOKEN }}
