@@ -1,6 +1,7 @@
 import { readFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import Handlebars from 'handlebars';
+import type { Page } from 'playwright';
 import { marked } from 'marked';
 import type { Resume } from './compose.js';
 
@@ -142,17 +143,33 @@ export interface PdfOptions {
 }
 
 /**
- * Print the HTML headless. Margins come from the theme's `@page` rule rather
- * than Playwright options, so screen and print stay in sync with the tokens.
+ * Load the HTML in a headless page and hand it to `use`, closing the browser
+ * whatever happens. Playwright is imported lazily so `vita lint` and
+ * `vita tags` never pay for a browser launch.
  */
-export async function renderPdf(html: string, outPath: string, options: PdfOptions = {}) {
-  // Imported lazily: `vita lint` and `vita tags` should not pay for a browser.
+async function withPage<T>(
+  html: string,
+  use: (page: Page) => Promise<T>,
+  viewport?: { width: number; height: number },
+): Promise<T> {
   const { chromium } = await import('playwright');
 
   const browser = await chromium.launch();
   try {
-    const page = await browser.newPage();
+    const page = await browser.newPage(viewport ? { viewport } : undefined);
     await page.setContent(html, { waitUntil: 'load' });
+    return await use(page);
+  } finally {
+    await browser.close();
+  }
+}
+
+/**
+ * Print the HTML headless. Margins come from the theme's `@page` rule rather
+ * than Playwright options, so screen and print stay in sync with the tokens.
+ */
+export async function renderPdf(html: string, outPath: string, options: PdfOptions = {}) {
+  await withPage(html, async (page) => {
     await page.emulateMedia({ media: 'print' });
     await page.pdf({
       path: outPath,
@@ -160,21 +177,13 @@ export async function renderPdf(html: string, outPath: string, options: PdfOptio
       printBackground: true,
       preferCSSPageSize: true,
     });
-  } finally {
-    await browser.close();
-  }
+  });
 }
 
 /** Screenshot the rendered HTML. Used for docs and visual review. */
 export async function renderScreenshot(html: string, outPath: string, width = 900) {
-  const { chromium } = await import('playwright');
-
-  const browser = await chromium.launch();
-  try {
-    const page = await browser.newPage({ viewport: { width, height: 1200 } });
-    await page.setContent(html, { waitUntil: 'load' });
-    await page.screenshot({ path: outPath, fullPage: true });
-  } finally {
-    await browser.close();
-  }
+  await withPage(html, (page) => page.screenshot({ path: outPath, fullPage: true }), {
+    width,
+    height: 1200,
+  });
 }

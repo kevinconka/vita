@@ -75,32 +75,79 @@ export function lintProfiles(
   return diagnostics;
 }
 
+/** One entry flattened to what the content checks actually need. */
+interface Checkable {
+  section: string;
+  label: string;
+  bullets: { text: string; tags: string[] }[];
+  startDate?: string;
+  endDate?: string;
+  /** Whether the entry says anything at all beyond its heading. */
+  hasProse: boolean;
+}
+
+/**
+ * Every dated, bulleted entry in the store. Education and projects carry the
+ * same shapes as work, so they get the same checks rather than only work
+ * being validated.
+ */
+function checkable(content: Content): Checkable[] {
+  return [
+    ...content.work.map((entry) => ({
+      section: 'work',
+      label: `${entry.position} at ${entry.name}`,
+      bullets: entry.highlights,
+      startDate: entry.startDate,
+      endDate: entry.endDate,
+      hasProse: Boolean(entry.summary) || entry.highlights.length > 0,
+    })),
+    ...content.education.map((entry) => ({
+      section: 'education',
+      label: entry.institution,
+      bullets: entry.courses,
+      startDate: entry.startDate,
+      endDate: entry.endDate,
+      // A degree stands on its own; courses are optional.
+      hasProse: true,
+    })),
+    ...content.projects.map((entry) => ({
+      section: 'projects',
+      label: entry.name,
+      bullets: entry.highlights,
+      startDate: entry.startDate,
+      endDate: entry.endDate,
+      hasProse: Boolean(entry.description) || entry.highlights.length > 0,
+    })),
+  ];
+}
+
 /** Content-side hygiene that the schema cannot express. */
 export function lintContent(content: Content): Diagnostic[] {
   const diagnostics: Diagnostic[] = [];
 
-  for (const entry of content.work) {
-    const label = `${entry.position} at ${entry.name}`;
-    if (entry.highlights.length === 0 && !entry.summary) {
+  for (const entry of checkable(content)) {
+    if (!entry.hasProse) {
       diagnostics.push({
         level: 'warn',
         source: 'content/',
-        message: `work entry "${label}" has neither summary nor highlights`,
+        message: `${entry.section} entry "${entry.label}" has neither summary nor highlights`,
       });
     }
-    if (entry.endDate && entry.endDate < entry.startDate) {
+
+    if (entry.startDate && entry.endDate && entry.endDate < entry.startDate) {
       diagnostics.push({
         level: 'error',
         source: 'content/',
-        message: `work entry "${label}" ends (${entry.endDate}) before it starts (${entry.startDate})`,
+        message: `${entry.section} entry "${entry.label}" ends (${entry.endDate}) before it starts (${entry.startDate})`,
       });
     }
-    for (const bullet of entry.highlights) {
+
+    for (const bullet of entry.bullets) {
       if (bullet.tags.length === 0) {
         diagnostics.push({
           level: 'warn',
           source: 'content/',
-          message: `untagged bullet in "${label}": no profile can select it — "${bullet.text.slice(0, 60)}…"`,
+          message: `untagged bullet in "${entry.label}": no profile can select it — "${bullet.text.slice(0, 60)}…"`,
         });
       }
     }

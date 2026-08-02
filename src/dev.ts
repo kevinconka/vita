@@ -1,6 +1,6 @@
 import { createServer } from 'node:http';
 import { watch } from 'node:fs';
-import { extname, join } from 'node:path';
+import { extname, resolve, sep } from 'node:path';
 import { readFile } from 'node:fs/promises';
 
 /**
@@ -48,9 +48,18 @@ const CONTENT_TYPES: Record<string, string> = {
 /**
  * Serve one built profile directory. `/` maps to the rendered HTML; the
  * refresh script polls a build counter so a rebuild reloads the tab.
+ *
+ * Pass port 0 to bind an ephemeral port and read the real one off `ready`.
  */
 export function servePreview(dir: string, port: number) {
   let generation = 0;
+
+  /** A traversal guard: `/../../etc/passwd` must not escape the build dir. */
+  const resolveWithin = (name: string): string | undefined => {
+    const target = resolve(dir, name);
+    const root = resolve(dir);
+    return target === root || target.startsWith(`${root}${sep}`) ? target : undefined;
+  };
 
   const server = createServer((req, res) => {
     const url = new URL(req.url ?? '/', 'http://localhost');
@@ -61,8 +70,17 @@ export function servePreview(dir: string, port: number) {
       return;
     }
 
-    const name = url.pathname === '/' ? 'index.html' : url.pathname.slice(1);
-    readFile(join(dir, name))
+    const name =
+      url.pathname === '/' ? 'index.html' : decodeURIComponent(url.pathname.slice(1));
+    const target = resolveWithin(name);
+
+    if (!target) {
+      res.writeHead(403, { 'content-type': 'text/plain' });
+      res.end('forbidden');
+      return;
+    }
+
+    readFile(target)
       .then((body) => {
         const type = CONTENT_TYPES[extname(name)] ?? 'application/octet-stream';
         res.writeHead(200, { 'content-type': type, 'cache-control': 'no-store' });
@@ -74,14 +92,27 @@ export function servePreview(dir: string, port: number) {
       });
   });
 
-  server.listen(port);
+  // Resolves once bound, so callers (and tests) can learn an ephemeral port.
+  const ready = new Promise<string>((resolvePort) => {
+    server.once('listening', () => {
+      const address = server.address();
+      const bound = typeof address === 'object' && address ? address.port : port;
+      resolvePort(`http://localhost:${bound}`);
+    });
+  });
+
+  // Loopback only. This serves the build directory off the developer's
+  // machine; binding 0.0.0.0 would expose an unfinished CV — and whatever the
+  // process can read — to everyone on the same network.
+  server.listen(port, '127.0.0.1');
+
   return {
-    url: `http://localhost:${port}`,
+    ready,
     /** Call after each successful rebuild so open tabs reload. */
     bump: () => {
       generation += 1;
     },
-    close: () => server.close(),
+    close: () => new Promise<void>((done) => server.close(() => done())),
   };
 }
 

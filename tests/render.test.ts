@@ -113,3 +113,25 @@ describe('theme discipline', () => {
     expect(body).not.toMatch(/\bfont-family:\s+(?!var\()/);
   });
 });
+
+describe('calendar dates', () => {
+  it.each([
+    ['2024-13', 'month 13'],
+    ['2024-02-30', 'February 30th'],
+    ['2024-00', 'month zero'],
+  ])('rejects %s (%s)', async (value) => {
+    const { contentSchema } = await import('../src/schema.js');
+    const result = contentSchema.safeParse({
+      work: [{ name: 'A', position: 'P', startDate: value }],
+    });
+    expect(result.success).toBe(false);
+  });
+
+  it.each(['2024', '2024-02', '2024-02-29'])('accepts %s', async (value) => {
+    const { contentSchema } = await import('../src/schema.js');
+    const result = contentSchema.safeParse({
+      work: [{ name: 'A', position: 'P', startDate: value }],
+    });
+    expect(result.success).toBe(true);
+  });
+});

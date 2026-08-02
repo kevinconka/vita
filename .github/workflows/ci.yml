@@ -13,8 +13,17 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
+    # Read-only: nothing here writes to the repo. The artifact upload uses the
+    # Actions API, not contents.
+    permissions:
+      contents: read
     steps:
       - uses: actions/checkout@v5
+        with:
+          # The job runs repo-controlled scripts (pnpm lifecycle hooks, tests,
+          # a headless browser). None of them need the workflow token, so do
+          # not leave it in the git config for them to find.
+          persist-credentials: false
 
       - uses: pnpm/action-setup@v4
 

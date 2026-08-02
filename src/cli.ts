@@ -99,7 +99,20 @@ program
     const dir = join(config.out, slug);
     const preview = servePreview(dir, Number(options.port));
 
-    const rebuild = async () => {
+    // Rebuilds are serialised. `watchDirs` debounces the *trigger*, but a
+    // rebuild is async: a second burst arriving mid-build would race the first
+    // on the same output files, and if they finished out of order the older
+    // HTML would win while the watcher reported success for the newer change.
+    let building = false;
+    let queued = false;
+
+    const rebuild = async (): Promise<void> => {
+      if (building) {
+        queued = true;
+        return;
+      }
+      building = true;
+
       try {
         const { html, htmlPath } = await buildResume(slug, config);
         // Live reload goes into the served copy only; build/index.html stays
@@ -114,6 +127,14 @@ program
       } catch (error) {
         // A typo in YAML should not kill the watcher.
         console.error(`${red('✗')} ${(error as Error).message}`);
+      } finally {
+        building = false;
+        // Collapse everything that arrived mid-build into one more pass, so
+        // the last edit always wins.
+        if (queued) {
+          queued = false;
+          await rebuild();
+        }
       }
     };
 
@@ -123,10 +144,12 @@ program
       onChange: rebuild,
     });
 
-    console.log(`${dim('watching content/, profiles/, theme/ →')} ${bold(preview.url)}`);
+    console.log(
+      `${dim('watching content/, profiles/, theme/ →')} ${bold(await preview.ready)}`,
+    );
     process.on('SIGINT', () => {
       stop();
-      preview.close();
+      void preview.close();
       process.exit(0);
     });
   });

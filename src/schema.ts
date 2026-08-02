@@ -40,10 +40,26 @@ export const bulletSchema = z
 
 export type Bullet = z.infer<typeof bulletSchema>;
 
-/** ISO 8601 date, truncated to the precision you actually have. */
+/**
+ * ISO 8601 date, truncated to the precision you actually have.
+ *
+ * The shape check alone would accept `2024-13` or `2024-02-30`, which then
+ * reach `formatDate` and render as nonsense in the PDF. Catching it here means
+ * the error names the file and field instead.
+ */
 const isoDate = z
   .string()
-  .regex(/^\d{4}(-\d{2}(-\d{2})?)?$/, 'expected YYYY, YYYY-MM or YYYY-MM-DD');
+  .regex(/^\d{4}(-\d{2}(-\d{2})?)?$/, 'expected YYYY, YYYY-MM or YYYY-MM-DD')
+  .refine((value) => {
+    const [year, month = '01', day = '01'] = value.split('-');
+    const date = new Date(`${year}-${month}-${day}T00:00:00Z`);
+    return (
+      !Number.isNaN(date.getTime()) &&
+      date.getUTCFullYear() === Number(year) &&
+      date.getUTCMonth() + 1 === Number(month) &&
+      date.getUTCDate() === Number(day)
+    );
+  }, 'not a real calendar date');
 
 export const workSchema = z
   .object({
@@ -113,6 +129,11 @@ export const basicsSchema = z
   .object({
     name: z.string().min(1),
     label: z.string().optional(),
+    /**
+     * Avatar. Prefer a `data:` URI or a local path: a remote URL is the one
+     * thing that makes the exported HTML and the PDF render depend on the
+     * network, which nothing else here does.
+     */
     image: z.string().optional(),
     email: z.email().optional(),
     phone: z.string().optional(),

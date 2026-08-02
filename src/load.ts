@@ -85,6 +85,21 @@ export async function loadContent(dir: string): Promise<Content> {
   return result.data;
 }
 
+/** True for "this candidate path simply is not there", not for real failures. */
+const isMissing = (error: unknown) => {
+  const code = (error as NodeJS.ErrnoException).code;
+  return code === 'ENOENT' || code === 'ENOTDIR' || code === 'EISDIR';
+};
+
+/** Parse YAML into a `ContentError` rather than letting `YAMLParseError` out. */
+function parseOrThrow(file: string, raw: string): unknown {
+  try {
+    return parseYaml(raw);
+  } catch (error) {
+    throw new ContentError([{ file, path: '', message: (error as Error).message }]);
+  }
+}
+
 /** Load one profile by name (`ml-lead` → `profiles/ml-lead.yaml`). */
 export async function loadProfile(dir: string, name: string): Promise<Profile> {
   const candidates = [join(dir, `${name}.yaml`), join(dir, `${name}.yml`), resolve(name)];
@@ -92,10 +107,14 @@ export async function loadProfile(dir: string, name: string): Promise<Profile> {
     let raw: string;
     try {
       raw = await readFile(file, 'utf8');
-    } catch {
-      continue;
+    } catch (error) {
+      // Only a missing candidate means "try the next extension". A permission
+      // error reported as "profile not found" would send you hunting for a
+      // typo that is not there.
+      if (isMissing(error)) continue;
+      throw new ContentError([{ file, path: '', message: (error as Error).message }]);
     }
-    const result = profileSchema.safeParse(parseYaml(raw));
+    const result = profileSchema.safeParse(parseOrThrow(file, raw));
     if (!result.success) throw new ContentError(toIssues(file, result.error));
     return result.data;
   }
@@ -111,7 +130,17 @@ export async function loadProfiles(dir: string): Promise<Map<string, Profile>> {
   const issues: Issue[] = [];
 
   for (const file of files) {
-    const result = profileSchema.safeParse(parseYaml(await readFile(file, 'utf8')));
+    // Collect parse failures alongside schema failures: `vita lint` should
+    // report every broken profile in one pass, not stop at the first.
+    let parsed: unknown;
+    try {
+      parsed = parseYaml(await readFile(file, 'utf8'));
+    } catch (error) {
+      issues.push({ file, path: '', message: (error as Error).message });
+      continue;
+    }
+
+    const result = profileSchema.safeParse(parsed);
     if (result.success) profiles.set(basename(file, extname(file)), result.data);
     else issues.push(...toIssues(file, result.error));
   }

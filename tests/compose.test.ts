@@ -207,6 +207,22 @@ describe('emit', () => {
     expect(resume.basics).toMatchObject({ name: 'Test Person', label: 'Tailored' });
   });
 
+  it('emits basics supplied only by the profile, with none in content', () => {
+    const store = contentSchema.parse({
+      work: [
+        {
+          name: 'Acme',
+          position: 'Engineer',
+          startDate: '2020-01',
+          tags: ['eng'],
+          highlights: [{ text: 'x', tags: ['eng'] }],
+        },
+      ],
+    });
+    const resume = compose(store, profile({ basics: { label: 'Profile only' } }), 't');
+    expect(resume.basics).toEqual({ label: 'Profile only' });
+  });
+
   it('keeps basics fields the profile did not set', () => {
     const store = content({
       basics: {

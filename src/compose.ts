@@ -248,7 +248,11 @@ export function compose(content: Content, profile: Profile, profileSlug: string)
   };
 
   const resume: Resume = { $schema: SCHEMA_URL };
-  if (content.basics) resume.basics = compact(basics as Record<string, unknown>);
+  // Guard on the merged map, not on content.basics: a profile may supply
+  // basics on its own, and keying off content alone would silently drop them.
+  if (Object.keys(basics).length > 0) {
+    resume.basics = compact(basics as Record<string, unknown>);
+  }
 
   // `sections` doubles as the output order; omitted sections are dropped.
   for (const section of profile.sections ?? SECTIONS) {
