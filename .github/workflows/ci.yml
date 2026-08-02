@@ -25,7 +25,7 @@ jobs:
           # not leave it in the git config for them to find.
           persist-credentials: false
 
-      - uses: pnpm/action-setup@v4
+      - uses: pnpm/action-setup@v6
 
       - uses: actions/setup-node@v5
         with:
