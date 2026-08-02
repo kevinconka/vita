@@ -1,0 +1,51 @@
+# A CV variant is a tag query, not a rewrite. Composition is deterministic:
+# filter by tags, sort, cap, strip, emit.
+name: ML Lead
+
+# Keep entries carrying at least one of these tags.
+# An empty list would keep everything.
+include:
+  - leadership
+  - ml
+  - cv
+  - mlops
+  - embedded
+  - data
+  - devex
+  - ai-tooling
+  - product
+  - infra
+  - language
+  - robotics
+
+# Dropped even if they matched above. Applied after `include`.
+exclude:
+  - early-career
+  - soft
+
+# Tag precedence: an entry sorts by the position of its first matching tag
+# here, ahead of its own `priority`.
+order:
+  - leadership
+  - ml
+  - cv
+  - mlops
+  - embedded
+  - data
+  - devex
+
+max_per_section: 6
+max_highlights: 5
+
+sections:
+  - work
+  - education
+  - skills
+  - languages
+
+# Tailor the headline for this variant without touching content/.
+basics:
+  label: Head of AI — Computer Vision & Real-Time Perception
+  summary: >-
+    Computer-vision lead. I own the path from dataset to a model running in real
+    time on the box, and I build the evaluation harness that proves it works.

@@ -1,0 +1,24 @@
+# Identity shown on every variant. Not taggable — a profile can override
+# individual fields via its own `basics:` block.
+#
+# Sample data is a fictional persona. Replace it with your own.
+basics:
+  name: Robin Vega
+  label: AI Enthusiast | Problem Solver | Team Player
+  email: robin.vega@example.com
+  url: https://example.com
+  summary: >-
+    Computer-vision engineer turned team lead. I take models from a notebook to
+    a box on a moving vehicle, and I care about the eval harness as much as the
+    architecture.
+  location:
+    city: Vienna
+    region: Wien
+    countryCode: AT
+  profiles:
+    - network: GitHub
+      username: robinvega
+      url: https://github.com/robinvega
+    - network: LinkedIn
+      username: robinvega
+      url: https://www.linkedin.com/in/robinvega

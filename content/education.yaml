@@ -1,0 +1,24 @@
+education:
+  - institution: Johannes Kepler Universität
+    area: Artificial Intelligence
+    studyType: M.Sc.
+    location: Linz, AT
+    startDate: '2022-09'
+    tags: [ml, current]
+    priority: 100
+
+  - institution: École Centrale de Nantes & Università degli Studi di Genova
+    area: Advanced Robotics
+    studyType: M.Sc.
+    startDate: '2016-09'
+    endDate: '2018-10'
+    tags: [robotics, cv]
+    priority: 90
+
+  - institution: Monterrey Institute of Technology and Higher Education
+    area: Digital Systems and Robotics
+    studyType: B.Sc.
+    startDate: '2011-08'
+    endDate: '2015-11'
+    tags: [robotics, early-career]
+    priority: 50

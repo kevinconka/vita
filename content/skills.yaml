@@ -1,0 +1,42 @@
+# Skill groups. Keywords are tagged individually, so a profile can drop a
+# single tool without dropping the whole group.
+skills:
+  - name: AI Stack
+    tags: [ml, cv]
+    priority: 100
+    keywords:
+      - { text: PyTorch, tags: [ml] }
+      - { text: TensorRT, tags: [ml, embedded] }
+      - { text: ONNX, tags: [ml, embedded] }
+      - { text: OpenCV, tags: [cv] }
+      - { text: FiftyOne, tags: [data, cv] }
+      - { text: Weights & Biases, tags: [mlops] }
+      - { text: Hugging Face, tags: [ml] }
+
+  - name: Dev Stack
+    tags: [devex, infra]
+    priority: 90
+    keywords:
+      - { text: Python, tags: [devex, ml] }
+      - { text: C++, tags: [embedded, cpp] }
+      - { text: Docker, tags: [infra, devex] }
+      - { text: GitHub Actions, tags: [devex] }
+      - { text: uv, tags: [devex] }
+      - { text: Linux, tags: [infra] }
+      - { text: Claude Code, tags: [ai-tooling, devex] }
+
+  - name: Strengths
+    tags: [leadership, soft]
+    priority: 40
+    keywords:
+      - { text: Hands-on, tags: [soft] }
+      - { text: Resourceful, tags: [soft] }
+      - { text: Eye for detail, tags: [soft] }
+      - { text: Effective, tags: [soft] }
+
+languages:
+  - { language: English, fluency: Fluent, tags: [language], priority: 100 }
+  - { language: Spanish, fluency: Native, tags: [language], priority: 95 }
+  - { language: French, fluency: Working proficiency, tags: [language], priority: 80 }
+  - { language: German, fluency: Conversational, tags: [language], priority: 70 }
+  - { language: Italian, fluency: Conversational, tags: [language], priority: 60 }
