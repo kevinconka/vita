@@ -27,7 +27,7 @@ type TokenTree = { [key: string]: string | number | TokenTree };
  * Flatten `{ color: { accent: "#000" } }` to `--color-accent: #000`.
  * Keys starting with `$` are metadata (`$comment`) and are skipped.
  */
-export function tokensToCss(tokens: TokenTree, prefix = ''): string[] {
+function tokensToCss(tokens: TokenTree, prefix = ''): string[] {
   const declarations: string[] = [];
 
   for (const [key, value] of Object.entries(tokens)) {
@@ -92,7 +92,7 @@ function renderMarkdown(value: unknown): string {
   return marked.parseInline(value, { async: false }).trim();
 }
 
-export function registerHelpers(handlebars: typeof Handlebars): void {
+function registerHelpers(handlebars: typeof Handlebars): void {
   handlebars.registerHelper(
     'md',
     (value: unknown) => new handlebars.SafeString(renderMarkdown(value)),

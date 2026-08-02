@@ -49,6 +49,23 @@ describe('dates', () => {
   });
 });
 
+describe('hostname helper', () => {
+  const hostname = async (value: unknown) => {
+    const theme = await loadTheme(themeDir);
+    return renderHtml(theme, {
+      basics: { name: 'X', url: value as string },
+    }).match(/<a href="[^"]*">([^<]*)<\/a>/)?.[1];
+  };
+
+  it('strips the scheme and www', async () => {
+    expect(await hostname('https://www.example.com/cv')).toBe('example.com');
+  });
+
+  it('passes through something that is not a URL', async () => {
+    expect(await hostname('not a url')).toBe('not a url');
+  });
+});
+
 describe('html', () => {
   const resume = {
     basics: {

@@ -55,8 +55,22 @@ jobs:
       - name: Typecheck
         run: pnpm typecheck
 
-      - name: Test
-        run: pnpm test
+      - name: Unused files, exports and dependencies
+        run: pnpm knip
+
+      # Thresholds live in vitest.config.ts, so a coverage drop fails here
+      # rather than waiting on the Codecov status.
+      - name: Test with coverage
+        run: pnpm coverage
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v5
+        with:
+          files: ./coverage/lcov.info
+          # Public repo: uploads work without a token via OIDC. The secret is
+          # picked up when set, and its absence must not fail the build.
+          token: ${{ secrets.CODECOV_TOKEN }}
+          fail_ci_if_error: false
 
       # The real end-to-end check: the golden test pins composition, this pins
       # that the theme actually renders and the PDF actually comes out.

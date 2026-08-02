@@ -1,0 +1,24 @@
+# Codecov is advisory here: vitest already enforces hard thresholds locally and
+# in CI, so a coverage dip fails `pnpm test` before Codecov ever sees it. This
+# config keeps the PR comment useful without adding a second blocking gate that
+# can fail for reasons unrelated to the diff (upload flakiness, missing token).
+coverage:
+  status:
+    project:
+      default:
+        target: auto
+        threshold: 2%
+        informational: true
+    patch:
+      default:
+        target: 80%
+        informational: true
+
+comment:
+  layout: 'reach, diff, flags, files'
+  require_changes: true
+
+ignore:
+  - 'src/cli.ts' # thin command layer, covered end-to-end by the CI build step
+  - 'tests/**'
+  - 'theme/**'
