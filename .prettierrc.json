@@ -1,0 +1,11 @@
+{
+  "singleQuote": true,
+  "trailingComma": "all",
+  "printWidth": 90,
+  "overrides": [
+    {
+      "files": ["*.hbs"],
+      "options": { "parser": "html" }
+    }
+  ]
+}
