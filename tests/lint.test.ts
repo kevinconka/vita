@@ -150,3 +150,41 @@ describe('lintContent', () => {
     expect(lintContent(ongoing)).toEqual([]);
   });
 });
+
+describe('lintContent covers every dated section', () => {
+  it('flags an untagged course on an education entry', () => {
+    const store = content({
+      education: [
+        {
+          institution: 'A University',
+          startDate: '2019',
+          courses: [{ text: 'An untagged course', tags: [] }],
+        },
+      ],
+    });
+    expect(messages(lintContent(store))[0]).toContain('untagged bullet');
+  });
+
+  it('errors on a project that ends before it starts', () => {
+    const store = content({
+      projects: [
+        {
+          name: 'Time Machine',
+          startDate: '2021',
+          endDate: '2020',
+          highlights: [{ text: 'x', tags: ['y'] }],
+        },
+      ],
+    });
+    const diagnostics = lintContent(store);
+    expect(diagnostics[0]?.level).toBe('error');
+    expect(diagnostics[0]?.message).toContain('projects entry "Time Machine"');
+  });
+
+  it('does not demand prose from a degree', () => {
+    const store = content({
+      education: [{ institution: 'A University', startDate: '2019' }],
+    });
+    expect(lintContent(store)).toEqual([]);
+  });
+});

@@ -102,6 +102,20 @@ describe('loadProfile', () => {
     await write('bad.yaml', 'name: Bad\nmax_per_section: 0\n');
     await expect(loadProfile(dir, 'bad')).rejects.toThrow();
   });
+
+  it('reports malformed profile YAML as a ContentError, not a raw parser throw', async () => {
+    await write('broken.yaml', 'name: [unclosed\n');
+    await expect(loadProfile(dir, 'broken')).rejects.toThrow(ContentError);
+  });
+
+  it('does not disguise a read failure as a missing profile', async () => {
+    // A directory where a profile file is expected: readFile fails with EISDIR,
+    // which must not be swallowed as "try the next candidate".
+    await mkdir(join(dir, 'adir.yaml'), { recursive: true });
+    const error = await loadProfile(dir, 'adir').catch((e: unknown) => e);
+    expect(error).toBeInstanceOf(ContentError);
+    expect((error as ContentError).message).not.toContain('profile not found');
+  });
 });
 
 describe('loadProfiles', () => {

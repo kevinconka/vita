@@ -85,10 +85,15 @@ export async function loadContent(dir: string): Promise<Content> {
   return result.data;
 }
 
-/** True for "this candidate path simply is not there", not for real failures. */
+/**
+ * True for "this candidate path simply is not there", not for real failures.
+ *
+ * EISDIR is deliberately absent: a directory sitting where `ml-lead.yaml`
+ * should be is a misconfiguration worth reporting, not a file to skip past.
+ */
 const isMissing = (error: unknown) => {
   const code = (error as NodeJS.ErrnoException).code;
-  return code === 'ENOENT' || code === 'ENOTDIR' || code === 'EISDIR';
+  return code === 'ENOENT' || code === 'ENOTDIR';
 };
 
 /** Parse YAML into a `ContentError` rather than letting `YAMLParseError` out. */
