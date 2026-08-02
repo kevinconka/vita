@@ -85,7 +85,7 @@ jobs:
       - name: Check the PDF is non-empty
         run: test -s build/ml-lead/ml-lead.pdf
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: ml-lead-cv
           path: |
