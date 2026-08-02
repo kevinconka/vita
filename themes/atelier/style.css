@@ -1,0 +1,259 @@
+/*
+ * atelier — an exhibition catalogue.
+ *
+ * One structural gesture, then nothing:
+ *
+ *   A single hairline runs the full height of the sheet, edge to edge, set
+ *   26mm in from the left. Section numerals sit ON that line, in the margin,
+ *   knocked out of it with a paper-coloured gap. Every word on the page lives
+ *   to the right of it, in one narrow measure.
+ *
+ * That is the entire design. There is no accent colour, no fill, no box, no
+ * bullet glyph and no second family — the wow, if there is one, has to come
+ * from proportion: a wide empty margin, a high crown of space above the name,
+ * and a measure narrow enough to read in one eye movement.
+ *
+ * The failure mode is adding things. Resist.
+ */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+@page {
+  size: var(--page-size);
+  margin: var(--page-margin);
+}
+
+html {
+  font-size: var(--font-size-base);
+}
+
+body {
+  background: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  font-weight: 400;
+  line-height: var(--font-line-height);
+  -webkit-font-smoothing: antialiased;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+
+.page {
+  background: var(--color-paper);
+  margin: 0 auto;
+  max-width: 210mm;
+  min-height: 297mm;
+  /* Left padding equals the rail offset, so the rail IS the content edge. */
+  padding: var(--page-top) var(--page-side) var(--page-side) var(--page-rail);
+  position: relative;
+}
+
+/* The rail. Full bleed top to bottom — it is the only line on the sheet. */
+.page::before {
+  background: var(--color-rail);
+  bottom: 0;
+  content: '';
+  left: var(--page-rail);
+  position: absolute;
+  top: 0;
+  width: var(--rule-width);
+}
+
+/*
+ * Everything sits right of the rail. The gutter keeps text off the line; the
+ * measure is capped only so long bullets do not run the full sheet width.
+ */
+.col {
+  max-width: var(--measure-text);
+  padding-left: var(--space-gutter);
+  position: relative;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+code {
+  font-size: 0.94em;
+  font-weight: 500;
+}
+
+/* --------------------------------------------------------------- masthead */
+
+.masthead {
+  padding-top: var(--space-crown);
+}
+
+.masthead__name {
+  font-size: var(--font-name-size);
+  font-weight: var(--font-name-weight);
+  letter-spacing: var(--font-name-tracking);
+  line-height: 1.06;
+}
+
+.masthead__label {
+  color: var(--color-grey);
+  font-size: var(--font-eyebrow-size);
+  font-weight: var(--font-eyebrow-weight);
+  letter-spacing: var(--font-eyebrow-tracking);
+  margin-top: calc(var(--space-unit) * 3);
+  text-transform: uppercase;
+}
+
+.masthead__summary {
+  margin-top: calc(var(--space-unit) * 4);
+}
+
+.contact {
+  color: var(--color-grey);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 calc(var(--space-unit) * 4);
+  list-style: none;
+  margin-top: calc(var(--space-unit) * 3);
+}
+
+.contact > li:not(:last-child)::after {
+  color: var(--color-grey-soft);
+  content: ' /';
+}
+
+/* ---------------------------------------------------------------- section */
+
+.section {
+  margin-top: var(--space-section);
+  position: relative;
+}
+
+/*
+ * The numeral hangs in the margin, sitting on the rail. The paper-coloured
+ * padding punches a gap in the line so the digit reads as interrupting it.
+ */
+.section__num {
+  background: var(--color-paper);
+  color: var(--color-grey-soft);
+  font-size: var(--font-numeral-size);
+  font-variant-numeric: tabular-nums;
+  font-weight: var(--font-numeral-weight);
+  /*
+   * The containing block is .section, whose left edge sits one gutter right
+   * of the rail. Box is 2·gutter wide, so left:-2·gutter puts its centre
+   * exactly on the line. The paper-coloured padding punches the gap.
+   */
+  left: calc(0px - var(--space-gutter) * 2);
+  line-height: 1;
+  padding: calc(var(--space-unit) * 1.5) 0;
+  position: absolute;
+  text-align: center;
+  top: -0.1em;
+  width: calc(var(--space-gutter) * 2);
+}
+
+.section__title {
+  color: var(--color-grey);
+  font-size: var(--font-eyebrow-size);
+  font-weight: var(--font-eyebrow-weight);
+  letter-spacing: var(--font-eyebrow-tracking);
+  margin-bottom: calc(var(--space-unit) * 4);
+  text-transform: uppercase;
+}
+
+/* ------------------------------------------------------------------ entry */
+
+.entry + .entry {
+  margin-top: var(--space-entry);
+}
+
+.entry__role {
+  font-size: var(--font-role-size);
+  font-weight: var(--font-role-weight);
+  letter-spacing: var(--font-role-tracking);
+}
+
+/* Employer and dates on one quiet line beneath the role. */
+.entry__meta {
+  color: var(--color-grey);
+  display: flex;
+  gap: calc(var(--space-unit) * 2);
+  justify-content: space-between;
+  margin-top: 0.1em;
+}
+
+.entry__when {
+  color: var(--color-grey-soft);
+  flex-shrink: 0;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+/*
+ * Bullets with no glyph. A hanging indent alone signals the list, which at
+ * this size is enough and leaves the left edge of the text truly straight.
+ */
+.entry__notes {
+  list-style: none;
+  margin-top: calc(var(--space-unit) * 2.5);
+}
+
+.entry__notes > li + li {
+  margin-top: var(--space-line);
+}
+
+/* ------------------------------------------------------------------ index */
+
+/* Skills, education and languages set as an index: term, then value. */
+.index {
+  display: grid;
+  gap: var(--space-line) calc(var(--space-unit) * 5);
+  grid-template-columns: 8em 1fr;
+}
+
+.index__term {
+  color: var(--color-grey);
+  font-size: var(--font-eyebrow-size);
+  font-weight: var(--font-eyebrow-weight);
+  letter-spacing: 0.1em;
+  padding-top: 0.25em;
+  text-transform: uppercase;
+}
+
+.runon {
+  list-style: none;
+}
+
+.runon > li {
+  display: inline;
+}
+
+.runon > li:not(:last-child)::after {
+  color: var(--color-grey-soft);
+  content: '  ·  ';
+  white-space: pre;
+}
+
+.edu + .edu {
+  margin-top: 0.3em;
+}
+
+.edu__where {
+  color: var(--color-grey);
+}
+
+@media print {
+  .page {
+    max-width: none;
+    min-height: 0;
+  }
+
+  .entry,
+  .section {
+    break-inside: avoid;
+  }
+}

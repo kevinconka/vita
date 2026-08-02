@@ -1,0 +1,98 @@
+{{!--
+  atelier — one column right of the rail, numerals hanging in the margin.
+  Skills, education and languages collapse into a single index so the sheet
+  ends with one block rather than three.
+--}}
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>{{resume.basics.name}}{{#if resume.basics.label}} — {{resume.basics.label}}{{/if}}</title>
+    <style>{{{css}}}</style>
+  </head>
+  <body>
+    <main class="page">
+      <div class="col">
+        <header class="masthead">
+          <h1 class="masthead__name">{{resume.basics.name}}</h1>
+          {{#if resume.basics.label}}
+            <p class="masthead__label">{{resume.basics.label}}</p>
+          {{/if}}
+          {{#if resume.basics.summary}}
+            <p class="masthead__summary">{{{md resume.basics.summary}}}</p>
+          {{/if}}
+          <ul class="contact">
+            {{#if resume.basics.email}}<li>{{resume.basics.email}}</li>{{/if}}
+            {{#with resume.basics.location}}
+              {{#if city}}<li>{{city}}{{#if countryCode}}, {{countryCode}}{{/if}}</li>{{/if}}
+            {{/with}}
+            {{#if resume.basics.url}}<li>{{hostname resume.basics.url}}</li>{{/if}}
+            {{#each resume.basics.profiles}}
+              <li>{{network}}/{{username}}</li>
+            {{/each}}
+          </ul>
+        </header>
+
+        {{#if resume.work.length}}
+          <section class="section">
+            <span class="section__num">01</span>
+            <h2 class="section__title">Experience</h2>
+            {{#each resume.work}}
+              <article class="entry">
+                <h3 class="entry__role">{{position}}</h3>
+                <p class="entry__meta">
+                  <span>{{name}}{{#if location}}, {{location}}{{/if}}</span>
+                  <span class="entry__when">{{dateRange startDate endDate}}</span>
+                </p>
+                {{#if summary}}<p class="entry__notes">{{{md summary}}}</p>{{/if}}
+                {{#if highlights.length}}
+                  <ul class="entry__notes">
+                    {{#each highlights}}<li>{{{md this}}}</li>{{/each}}
+                  </ul>
+                {{/if}}
+              </article>
+            {{/each}}
+          </section>
+        {{/if}}
+
+        <section class="section">
+          <span class="section__num">02</span>
+          <h2 class="section__title">Index</h2>
+          <div class="index">
+            {{#if resume.education.length}}
+              <div class="index__term">Education</div>
+              <div>
+                {{#each resume.education}}
+                  <div class="edu">
+                    {{#if studyType}}{{studyType}}{{#if area}}, {{area}}{{/if}}{{else}}{{area}}{{/if}}
+                    <span class="edu__where">
+                      — {{institution}}, {{dateRange startDate endDate}}
+                    </span>
+                  </div>
+                {{/each}}
+              </div>
+            {{/if}}
+
+            {{#each resume.skills}}
+              <div class="index__term">{{name}}</div>
+              <div>
+                <ul class="runon">
+                  {{#each keywords}}<li>{{this}}</li>{{/each}}
+                </ul>
+              </div>
+            {{/each}}
+
+            {{#if resume.languages.length}}
+              <div class="index__term">Languages</div>
+              <div>
+                <ul class="runon">
+                  {{#each resume.languages}}<li>{{language}} ({{fluency}})</li>{{/each}}
+                </ul>
+              </div>
+            {{/if}}
+          </div>
+        </section>
+      </div>
+    </main>
+  </body>
+</html>
